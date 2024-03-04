@@ -1,22 +1,44 @@
 import { useState } from 'react'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(email);
         try {
-            const response = await axios.post('http://localhost:8000/api/login/', {
+            const response = await axios.post('http://localhost:8080/api/login', {
                 email,
                 password,
             });
-            console.log(response.data); // Handle success response
+
+            // Assuming your backend responds with status 201 upon successful login
+            if (response.status === 201) {
+                const { accessToken, refreshToken } = response.data;
+
+                // Set cookies for accessToken and refreshToken
+                Cookies.set('accessToken', accessToken, { expires: 1, secure: true, sameSite: 'None' });
+                Cookies.set('refreshToken', refreshToken, { expires: 7, secure: true, sameSite: 'None' });
+
+                console.log('Login successful');
+                console.log('Access Token:', accessToken);
+                console.log('Refresh Token:', refreshToken);
+                window.location.href='/'
+            }
+
         } catch (error) {
-            console.error('Login error:', error.response.data); // Handle error response
+            if (error.response) {
+                setError(error.response.data.message);
+                console.error('Login error:', error.response.data);
+              } 
+              else {
+                setError('An unexpected error occurred. Please try again.');
+                console.error('Error:', error.message);
+              }
         }
     };
 
@@ -54,6 +76,7 @@ function Login() {
                         <label htmlFor="remember" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
                     </div> */}
                     <button type="submit" className="text-white bg-sky-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </form>
 
             </div>

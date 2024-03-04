@@ -4,8 +4,9 @@ const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const dotenv = require('dotenv');
-
 dotenv.config();
+
+const jwtConfig = require('../helpers/jwtConfig');
 
 
 function register(req, res) {
@@ -74,21 +75,79 @@ function login(req, res) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.TOKEN_SECRET, { expiresIn: '2m' });
+        const accessToken = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '0.5m' }
+        );
 
-        // Storing token in cookie
-        res.cookie('token', token, {
+        const refreshToken = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '1m' }
+        );
+        res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true, 
             sameSite: 'None',
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
         });
-
-        res.json({ message: 'Login successful', token });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true, 
+            sameSite: 'None',
+        });
+        res.status(201).json({ message: 'Login successful', 'accessToken': accessToken, 'refreshToken': refreshToken });
     });
 }
+
+function refreshToken(req, res) {
+    const authHeader = req.headers['authorization']
+
+    console.log(authHeader);
+
+    let refresh_token = authHeader && authHeader.split(' ')[1];
+
+    console.log("REFRESH_TOKEN2", refresh_token);
+
+    if (refresh_token == null) {
+        res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
+        return res.end();
+    }
+
+    jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+        if (err) {
+            res.status(401).send({ error: true, message: "Refresh token is expired or invalid" }); // Refresh token is expired or invalid
+            return res.end();
+        }
+
+        if (user != undefined) {
+            const accessToken = jwt.sign(
+                { id: user.id, email: user.email },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '0.5m' }
+            );
+
+            const refreshToken = jwt.sign(
+                { id: user.id, email: user.email },
+                process.env.REFRESH_TOKEN_SECRET,
+                { expiresIn: '1m' }
+            );
+
+            // Sending new data
+            res.status(200).send({
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            });
+            console.log(user) // Displaying user
+            console.log("New Access Token:", accessToken);
+            console.log("New Refresh Token:", refreshToken);
+        }
+    });
+}
+
 
 module.exports = {
     register,
     login,
+    refreshToken
 };

@@ -1,0 +1,31 @@
+[REQ] : 2024-03-11T15:34:00.293Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:34:00.294Z | [OPTIONS] URL = /users/ | Client Address = ::1 | Status = 204
+[REQ] : 2024-03-11T15:34:00.309Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:34:00.309Z | [GET] URL = /users/ | Client Address = ::1 | Status = 304
+[REQ] : 2024-03-11T15:35:47.264Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:35:47.266Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:35:47.281Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:35:47.282Z | [GET] | Response Status = 304
+[REQ] : 2024-03-11T15:36:05.772Z  | [OPTIONS] URL = http://localhost:8080/users/5 | Client Address = ::1
+[RES] : 2024-03-11T15:36:05.773Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:36:05.782Z  | [GET] URL = http://localhost:8080/users/5 | Client Address = ::1
+[RES] : 2024-03-11T15:36:05.782Z | [GET] | Response Status = 304
+[REQ] : 2024-03-11T15:36:10.321Z  | [OPTIONS] URL = http://localhost:8080/users/update-row/5 | Client Address = ::1
+[RES] : 2024-03-11T15:36:10.321Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:36:10.325Z  | [PUT] URL = http://localhost:8080/users/update-row/5 | Client Address = ::1
+[RES] : 2024-03-11T15:36:10.325Z | [PUT] | Response Status = 200
+[REQ] : 2024-03-11T15:36:14.403Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:36:14.403Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:36:14.412Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:36:14.413Z | [GET] | Response Status = 200
+[REQ] : 2024-03-11T15:39:04.853Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:39:04.855Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:39:04.863Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
+[ERROR] 2024-03-11T15:39:04.870Z
+[RES] : 2024-03-11T15:39:04.867Z | [GET] | Response Status = 401
+[REQ] : 2024-03-11T15:39:04.891Z  | [OPTIONS] URL = http://localhost:8080/api/refresh-token/ | Client Address = ::1
+[RES] : 2024-03-11T15:39:04.892Z | [OPTIONS] | Response Status = 204
+[REQ] : 2024-03-11T15:39:04.901Z  | [POST] URL = http://localhost:8080/api/refresh-token/ | Client Address = ::1
+[RES] : 2024-03-11T15:39:04.901Z | [POST] | Response Status = 200
+[REQ] : 2024-03-11T15:39:04.927Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
+[RES] : 2024-03-11T15:39:04.927Z | [GET] | Response Status = 304

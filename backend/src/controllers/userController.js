@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
@@ -28,9 +29,50 @@ function getUserById(req, res) {
         }
         res.json(user);
     });
-}
+};
+
+const createStudent = async (req, res) => {
+    const login_user = req.body.login_user;
+    const totalStudents = await userModel.getNumberOfStudents();
+
+    const studentSchema = Joi.object({
+        name: Joi.string().min(3).required(),
+        email: Joi.string().email().required(),
+    }).unknown();
+    const { error, value } = studentSchema.validate(req.body);
+
+    if (error) {
+        console.log(error)
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const newStudent = {
+        uuid: uuidv4(),
+        student_id: totalStudents + 1,
+        name: value.name,
+        email: value.email
+    };
+
+    userModel.createUser(newStudent, (err, result) => {
+        if (err) {
+            console.error('Error creating student:', err);
+            return res.status(500).json({ error: 'Failed to create student' });
+        }
+
+        const createdStudent = {
+            uuid: newStudent.uuid,
+            student_id: newStudent.id,
+            name: newStudent.name,
+            email: newStudent.email
+        };
+
+        return res.status(200).json({ message: 'Student created successfully', student: createdStudent });
+    });
+};
+
 
 function updateUserById(req, res) {
+    const login_user = req.body.login_user;
 
     const userSchema = Joi.object({
         name: Joi.string().min(3).required(),
@@ -44,7 +86,7 @@ function updateUserById(req, res) {
     };
 
     const { error, value } = userSchema.validate(updatedUser);
-
+    // Validation error
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
@@ -54,12 +96,11 @@ function updateUserById(req, res) {
             console.error('Error updating user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        res.json({ message: 'User updated successfully', user: result });
+        res.status(200).json({ message: 'User updated successfully', user: result });
     });
 }
 
 function updatePartialUserById(req, res) {
-
     const userId = req.params.id;
     const updatedUser = {
         ...req.body
@@ -94,7 +135,7 @@ function updatePartialUserById(req, res) {
             console.error('Error updating user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        res.json({ message: 'User updated partially successfully', user: result });
+        res.json({ message: 'User updated-partially successfully', user: result });
     });
 }
 
@@ -110,10 +151,29 @@ function deleteUserById(req, res) {
     });
 }
 
+function deactivateUserById(req, res) {
+    const login_user = req.body.login_user;
+    const userId = parseInt(req.params.id);
+    console.log("UserId:", userId )
+    const updatedUser = {
+        is_active: 0,
+    };
+
+    userModel.updateUserById(userId, updatedUser, (err, result) => {
+        if (err) {
+            console.error('Error deactivating user:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        res.status(200).json({ message: 'User deactivated successfully', user: result });
+    });
+}
+
 module.exports = {
+    createStudent,
     getAllUsers,
     getUserById,
     updateUserById,
     updatePartialUserById,
-    deleteUserById
+    deleteUserById,
+    deactivateUserById,
 };

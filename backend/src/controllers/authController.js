@@ -1,20 +1,18 @@
+const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const userModel = require('../models/userModel');
+const authModel = require('../models/authModel');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const dotenv = require('dotenv');
 dotenv.config();
 
-const jwtConfig = require('../helpers/jwtConfig');
-
 
 function register(req, res) {
-
     const userSchema = Joi.object({
         name: Joi.string().min(3).required(),
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).max(14).required(),
+        password: Joi.string().min(6).max(14).required(),
     });
 
     const { error, value } = userSchema.validate(req.body);
@@ -23,33 +21,47 @@ function register(req, res) {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    bcrypt.hash(value.password, saltRounds, (err, hash) => {
-        if (err) {
-            console.error('Error in encryption:', err);
-            return res.status(500).json({ error: 'Error in encryption' });
-        }
-        const newUser = {
-            name: value.name,
-            email: value.email,
-            password: hash
-        };
-
-        userModel.registerUser(newUser, (err, result) => {
-            if (err) {
-                console.error('Error:', err);
-                return res.status(500).json({ error: error.details[0].message });
+    authModel.getAdminByEmail(value.email)
+        .then(existingAdmin => {
+            if (existingAdmin) {
+                // Admin with this email already exists
+                return res.status(409).json({ error: 'Email already exists' });
             }
 
-            const createdUser = {
-                name: newUser.name,
-                email: newUser.email,
-                password: value.password
-            };
+            bcrypt.hash(value.password, saltRounds, (hashErr, hash) => {
+                if (hashErr) {
+                    console.error('Error in encryption:', hashErr);
+                    return res.status(500).json({ error: 'Error in encryption' });
+                }
 
-            return res.status(200).json({ message: 'User created successfully', user: createdUser });
+                const newAdmin = {
+                    uuid: uuidv4(),
+                    name: value.name,
+                    email: value.email,
+                    password: hash,
+                };
+
+                authModel.registerAdmin(newAdmin, (registerErr, result) => {
+                    if (registerErr) {
+                        console.error('Error:', registerErr);
+                        return res.status(500).json({ error: 'Error creating admin' });
+                    }
+
+                    const createdAdmin = {
+                        name: newAdmin.name,
+                        email: newAdmin.email,
+                    };
+
+                    return res.status(200).json({ message: 'Admin created successfully', admin: createdAdmin });
+                });
+            });
+        })
+        .catch(err => {
+            console.error('Error checking existing admin:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
         });
-    })
 }
+
 
 // Joi for login input
 const loginSchema = Joi.object({
@@ -66,7 +78,7 @@ function login(req, res) {
 
     const { email, password } = value;
 
-    userModel.loginUser(email, password, (err, user) => {
+    authModel.loginAdmin(email, password, async (err, user) => {
         if (err) {
             console.error('Error logging in user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
@@ -74,30 +86,103 @@ function login(req, res) {
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
-
+        const admin = await authModel.getAdminByEmail(user.email);
         const accessToken = jwt.sign(
-            { id: user.id, email: user.email },
+            { uuid: admin.uuid, email: admin.email },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '0.5m' }
+            { expiresIn: '5m' }
         );
 
         const refreshToken = jwt.sign(
-            { id: user.id, email: user.email },
+            { uuid: user.uuid, email: user.email },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1m' }
+            { expiresIn: '8m' }
         );
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: true, 
+            secure: true,
             sameSite: 'None',
         });
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: true, 
+            secure: true,
             sameSite: 'None',
         });
         res.status(201).json({ message: 'Login successful', 'accessToken': accessToken, 'refreshToken': refreshToken });
     });
+}
+
+const getProfile = async (req, res) => {
+    const user = req.body.login_user;
+
+    if (!user) {
+        return res.status(401).json({ error: 'User not found' });
+    }
+
+    try {
+        const admin = await authModel.getAdminByEmail(user.email);
+        if (!admin) {
+            return res.status(404).json({ error: 'Admin data not found' });
+        }
+        return res.status(200).json({ user: admin });
+    } catch (error) {
+        console.error('Error getting admin data:', error);
+        return res.status(500).json({ error: 'Failed to get admin data' });
+    }
+}
+
+async function changePassword(req, res) {
+    const email = req.headers.email;
+    const oldPassword= req.headers.oldpassword;
+    const newPassword= req.headers.newpassword;
+
+    console.log("oldPassword", oldPassword);
+    console.log("newPassword", newPassword);
+    console.log("email", email)
+    // Validate newPassword
+    const schema = Joi.object({
+        newPassword: Joi.string().min(6).required()
+    });
+
+    const { error: newPassError, value } = schema.validate({ newPassword });
+
+    if (newPassError) {
+        const errorMessage = newPassError.details.map((detail) => detail.message).join(', ');
+        return res.status(400).json({ error: errorMessage });
+    }
+
+    try {
+        // Get admin from database
+        const admin = await authModel.getAdminByEmail(email);
+
+        if (!admin) {
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+
+        const passwordMatch = await bcrypt.compare(oldPassword, admin.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid old password' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const updatedUser = {
+            password: hashedPassword,
+        };
+
+        authModel.updatePassword(admin.admin_id, updatedUser, (updateErr, result) => {
+            if (updateErr) {
+                console.error('Error updating password:', updateErr);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            res.json({ message: 'Password updated successfully' });
+        });
+
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 function refreshToken(req, res) {
@@ -121,16 +206,17 @@ function refreshToken(req, res) {
         }
 
         if (user != undefined) {
+            const admin = await authModel.getAdminByEmail(user.email);
             const accessToken = jwt.sign(
-                { id: user.id, email: user.email },
+                { uuid:admin.uuid, email: user.email },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '0.5m' }
+                { expiresIn: '5m' }
             );
 
             const refreshToken = jwt.sign(
-                { id: user.id, email: user.email },
+                { uuid:admin.uuid, email: user.email },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '1m' }
+                { expiresIn: '8m' }
             );
 
             // Sending new data
@@ -149,5 +235,7 @@ function refreshToken(req, res) {
 module.exports = {
     register,
     login,
+    getProfile,
+    changePassword,
     refreshToken
 };

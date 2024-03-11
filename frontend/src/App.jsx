@@ -1,23 +1,39 @@
 import { React, useState } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from './components/home/Home';
+import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
+import Navbar from './components/navbar/Navbar';
+import HomePage from './components/user/Home';
+import Profile from './components/user/Profile';
+import CheckLog from './components/user/CheckLog';
+import UpdateForm from './components/user/UpdateForm';
 import Login from './components/auth/Login';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-// import './App.css'
+import Register from './components/auth/Register';
+import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-    <BrowserRouter>
+      <Router>
       <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-        
+        <Route
+          path="/"
+          element={
+            <div>
+              <Navbar />
+              <Outlet />
+            </div>
+          }
+        >
+          <Route index element={<HomePage />} />
+          <Route path="/update/:id" element={<UpdateForm />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/check-log" element={<CheckLog />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
     </>
   )
 }

@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const logger = require('../logger/logger');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -72,7 +73,6 @@ const createStudent = async (req, res) => {
 
 
 function updateUserById(req, res) {
-    const login_user = req.body.login_user;
 
     const userSchema = Joi.object({
         name: Joi.string().min(3).required(),
@@ -154,7 +154,7 @@ function deleteUserById(req, res) {
 function deactivateUserById(req, res) {
     const login_user = req.body.login_user;
     const userId = parseInt(req.params.id);
-    console.log("UserId:", userId )
+    console.log("UserId:", userId)
     const updatedUser = {
         is_active: 0,
     };

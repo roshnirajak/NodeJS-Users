@@ -45,9 +45,9 @@ const HomePage = () => {
     useEffect(() => {
         getAllUsers();
     }, []);
-    const getAllUsers = async () => {
+    const getAllUsers = async (pageNumber = 1) => {
         try {
-            const response = await axios.get('http://localhost:8080/users/', {
+            const response = await axios.get(`http://localhost:8080/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -141,7 +141,6 @@ const HomePage = () => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options);
     };
-
     return (
         <div>
             {loading ? (
@@ -194,9 +193,9 @@ const HomePage = () => {
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                {/* <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3">
                                     User ID
-                                </th> */}
+                                </th>
                                 <th scope="col" className="px-6 py-3">
                                     Full Name
                                 </th>

@@ -4,23 +4,20 @@ const cors = require('cors');
 // const userRoutes = 
 const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes')
-const logger = require('./src/logger/logger')
+const loggerMiddleware = require('./src/middleware/loggerMiddleware')
 
-app.use(logger.requestLogger);
-app.use(logger.responseLogger);
+
 
 app.use(cors())
 
 //use to parse the data in json format
 app.use(express.json());
 
+app.use(loggerMiddleware);
 
 app.use('/api', authRoutes);
 app.use('/users', userRoutes);
 
-
-
-app.use(logger.errorLogger);
 
 const PORT = 8080;
 app.listen(PORT, () => {

@@ -65,8 +65,8 @@ function register(req, res) {
 
 // Joi for login input
 const loginSchema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().required()
+    email: Joi.string().email().required()
+    // Password is not included in the schema since it will be retrieved from headers
 });
 
 function login(req, res) {
@@ -76,7 +76,8 @@ function login(req, res) {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { email, password } = value;
+    const { email } = value;
+    const password = req.headers.password; // Retrieve password from headers
 
     authModel.loginAdmin(email, password, async (err, user) => {
         if (err) {
@@ -133,8 +134,8 @@ const getProfile = async (req, res) => {
 
 async function changePassword(req, res) {
     const email = req.headers.email;
-    const oldPassword= req.headers.oldpassword;
-    const newPassword= req.headers.newpassword;
+    const oldPassword = req.headers.oldpassword;
+    const newPassword = req.headers.newpassword;
 
     console.log("oldPassword", oldPassword);
     console.log("newPassword", newPassword);
@@ -208,13 +209,13 @@ function refreshToken(req, res) {
         if (user != undefined) {
             const admin = await authModel.getAdminByEmail(user.email);
             const accessToken = jwt.sign(
-                { uuid:admin.uuid, email: user.email },
+                { uuid: admin.uuid, email: user.email },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '5m' }
             );
 
             const refreshToken = jwt.sign(
-                { uuid:admin.uuid, email: user.email },
+                { uuid: admin.uuid, email: user.email },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '8m' }
             );

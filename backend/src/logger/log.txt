@@ -1,31 +1,222 @@
-[REQ] : 2024-03-11T15:34:00.293Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:34:00.294Z | [OPTIONS] URL = /users/ | Client Address = ::1 | Status = 204
-[REQ] : 2024-03-11T15:34:00.309Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:34:00.309Z | [GET] URL = /users/ | Client Address = ::1 | Status = 304
-[REQ] : 2024-03-11T15:35:47.264Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:35:47.266Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:35:47.281Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:35:47.282Z | [GET] | Response Status = 304
-[REQ] : 2024-03-11T15:36:05.772Z  | [OPTIONS] URL = http://localhost:8080/users/5 | Client Address = ::1
-[RES] : 2024-03-11T15:36:05.773Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:36:05.782Z  | [GET] URL = http://localhost:8080/users/5 | Client Address = ::1
-[RES] : 2024-03-11T15:36:05.782Z | [GET] | Response Status = 304
-[REQ] : 2024-03-11T15:36:10.321Z  | [OPTIONS] URL = http://localhost:8080/users/update-row/5 | Client Address = ::1
-[RES] : 2024-03-11T15:36:10.321Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:36:10.325Z  | [PUT] URL = http://localhost:8080/users/update-row/5 | Client Address = ::1
-[RES] : 2024-03-11T15:36:10.325Z | [PUT] | Response Status = 200
-[REQ] : 2024-03-11T15:36:14.403Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:36:14.403Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:36:14.412Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:36:14.413Z | [GET] | Response Status = 200
-[REQ] : 2024-03-11T15:39:04.853Z  | [OPTIONS] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:39:04.855Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:39:04.863Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
-[ERROR] 2024-03-11T15:39:04.870Z
-[RES] : 2024-03-11T15:39:04.867Z | [GET] | Response Status = 401
-[REQ] : 2024-03-11T15:39:04.891Z  | [OPTIONS] URL = http://localhost:8080/api/refresh-token/ | Client Address = ::1
-[RES] : 2024-03-11T15:39:04.892Z | [OPTIONS] | Response Status = 204
-[REQ] : 2024-03-11T15:39:04.901Z  | [POST] URL = http://localhost:8080/api/refresh-token/ | Client Address = ::1
-[RES] : 2024-03-11T15:39:04.901Z | [POST] | Response Status = 200
-[REQ] : 2024-03-11T15:39:04.927Z  | [GET] URL = http://localhost:8080/users/ | Client Address = ::1
-[RES] : 2024-03-11T15:39:04.927Z | [GET] | Response Status = 304
+2024-03-12T12:54:58.662Z: [REQ] : 5a690158-b22c-4c41-943e-2eac17685b4f | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T12:54:58.662Z: [INF] : 5a690158-b22c-4c41-943e-2eac17685b4f | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T12:54:58.662Z: [ERR] : 5a690158-b22c-4c41-943e-2eac17685b4f | Message = [object Object]
+
+2024-03-12T12:54:58.662Z: [ERR] : 5a690158-b22c-4c41-943e-2eac17685b4f | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-12T12:54:58.662Z: [RES] : 5a690158-b22c-4c41-943e-2eac17685b4f | Response Status = 401
+
+2024-03-12T12:54:58.662Z: [RES] : 5a690158-b22c-4c41-943e-2eac17685b4f | Response Status = 401
+
+2024-03-12T12:54:58.752Z: [REQ] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-12T12:54:58.752Z: [INF] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Method = POST| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T12:54:58.752Z: [ERR] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Message = [object Object]
+
+2024-03-12T12:54:58.752Z: [ERR] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-03-12T12:54:58.752Z: [RES] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Response Status = 401
+
+2024-03-12T12:54:58.752Z: [RES] : dee5e7af-fc2d-4c75-a10e-03562b837f44 | Response Status = 401
+
+2024-03-12T12:55:03.941Z: [REQ] : 5ed88619-c67a-4d69-beb9-c25996a4bdcd | Client Address = ::1, Request URL= http://localhost:8080/api/login
+
+2024-03-12T12:55:03.941Z: [INF] : 5ed88619-c67a-4d69-beb9-c25996a4bdcd | Method = POST| Body = {"email":"admin1@gmail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T12:55:03.941Z: [RES] : 5ed88619-c67a-4d69-beb9-c25996a4bdcd | Response Status = 201
+
+2024-03-12T12:55:04.176Z: [REQ] : a439eba7-75be-493d-a347-f1ad1abd26ea | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T12:55:04.176Z: [INF] : a439eba7-75be-493d-a347-f1ad1abd26ea | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T12:55:04.176Z: [RES] : a439eba7-75be-493d-a347-f1ad1abd26ea | Response Status = 304
+
+2024-03-12T13:00:04.103Z: [REQ] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:00:04.103Z: [INF] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:00:04.103Z: [ERR] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Message = [object Object]
+
+2024-03-12T13:00:04.103Z: [ERR] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-12T13:00:04.103Z: [RES] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Response Status = 401
+
+2024-03-12T13:00:04.103Z: [RES] : 88e3ab37-0b0b-442a-a9cb-4d9e38af7e43 | Response Status = 401
+
+2024-03-12T13:00:04.230Z: [REQ] : ca459466-4ed2-4f84-ad3a-a8d90ac8b6d7 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-12T13:00:04.230Z: [INF] : ca459466-4ed2-4f84-ad3a-a8d90ac8b6d7 | Method = POST| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:00:04.230Z: [RES] : ca459466-4ed2-4f84-ad3a-a8d90ac8b6d7 | Response Status = 200
+
+2024-03-12T13:00:04.334Z: [REQ] : 8a6fab8e-a2a3-4a13-bf69-b60361e66f10 | Client Address = ::1, Request URL= http://localhost:8080/users/
+
+2024-03-12T13:00:04.334Z: [INF] : 8a6fab8e-a2a3-4a13-bf69-b60361e66f10 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:00:04.334Z: [RES] : 8a6fab8e-a2a3-4a13-bf69-b60361e66f10 | Response Status = 304
+
+2024-03-12T13:00:52.679Z: [REQ] : 49c05913-63a0-4429-b36b-79e1c08cf343 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:00:52.679Z: [INF] : 49c05913-63a0-4429-b36b-79e1c08cf343 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:00:52.679Z: [RES] : 49c05913-63a0-4429-b36b-79e1c08cf343 | Response Status = 304
+
+2024-03-12T13:01:07.096Z: [REQ] : 4aceffc2-8143-4e65-b33b-8ab62b779ae8 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:01:07.096Z: [INF] : 4aceffc2-8143-4e65-b33b-8ab62b779ae8 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:01:07.096Z: [RES] : 4aceffc2-8143-4e65-b33b-8ab62b779ae8 | Response Status = 304
+
+2024-03-12T13:01:13.187Z: [REQ] : decb1d51-ebda-4ddb-9415-c55e32a2bacf | Client Address = ::1, Request URL= http://localhost:8080/users/5
+
+2024-03-12T13:01:13.187Z: [INF] : decb1d51-ebda-4ddb-9415-c55e32a2bacf | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:01:13.187Z: [RES] : decb1d51-ebda-4ddb-9415-c55e32a2bacf | Response Status = 200
+
+2024-03-12T13:01:16.246Z: [REQ] : 5b480720-0714-4d5f-8581-13eb8bb3face | Client Address = ::1, Request URL= http://localhost:8080/users/update-row/5
+
+2024-03-12T13:01:16.246Z: [INF] : 5b480720-0714-4d5f-8581-13eb8bb3face | Method = PUT| Body = {"name":"Karen","email":"karen@mail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:01:16.246Z: [RES] : 5b480720-0714-4d5f-8581-13eb8bb3face | Response Status = 200
+
+2024-03-12T13:01:20.310Z: [REQ] : 7489019f-4aa5-418a-8f51-cd23821f816f | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:01:20.310Z: [INF] : 7489019f-4aa5-418a-8f51-cd23821f816f | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:01:20.310Z: [RES] : 7489019f-4aa5-418a-8f51-cd23821f816f | Response Status = 200
+
+2024-03-12T13:02:27.236Z: [REQ] : 8e631ced-a501-4340-a7b8-246ea9f4269f | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:02:27.236Z: [INF] : 8e631ced-a501-4340-a7b8-246ea9f4269f | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:02:27.236Z: [RES] : 8e631ced-a501-4340-a7b8-246ea9f4269f | Response Status = 304
+
+2024-03-12T13:03:44.299Z: [REQ] : db6584e7-e679-4727-87c5-609e9e312c67 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:03:44.299Z: [INF] : db6584e7-e679-4727-87c5-609e9e312c67 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:03:44.299Z: [RES] : db6584e7-e679-4727-87c5-609e9e312c67 | Response Status = 304
+
+2024-03-12T13:03:46.065Z: [REQ] : bfeec214-1625-481d-b58c-2fc6cb528281 | Client Address = ::1, Request URL= http://localhost:8080/users/5
+
+2024-03-12T13:03:46.065Z: [INF] : bfeec214-1625-481d-b58c-2fc6cb528281 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:03:46.065Z: [RES] : bfeec214-1625-481d-b58c-2fc6cb528281 | Response Status = 200
+
+2024-03-12T13:03:49.882Z: [REQ] : c2b55fe3-d38e-4b00-9f8a-49da3c603fb8 | Client Address = ::1, Request URL= http://localhost:8080/users/update-row/5
+
+2024-03-12T13:03:49.882Z: [INF] : c2b55fe3-d38e-4b00-9f8a-49da3c603fb8 | Method = PUT| Body = {"name":"Karen","email":"karen@gmail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:03:49.882Z: [RES] : c2b55fe3-d38e-4b00-9f8a-49da3c603fb8 | Response Status = 200
+
+2024-03-12T13:03:53.988Z: [REQ] : 4f11a6ea-14c9-4d1f-b584-6605778c6a98 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:03:53.988Z: [INF] : 4f11a6ea-14c9-4d1f-b584-6605778c6a98 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:03:53.988Z: [RES] : 4f11a6ea-14c9-4d1f-b584-6605778c6a98 | Response Status = 200
+
+2024-03-12T13:07:42.052Z: [REQ] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:07:42.052Z: [INF] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:07:42.052Z: [ERR] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Message = [object Object]
+
+2024-03-12T13:07:42.052Z: [ERR] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-12T13:07:42.052Z: [RES] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Response Status = 401
+
+2024-03-12T13:07:42.052Z: [RES] : 5676734b-ebf4-47b3-9b12-30f64e661d18 | Response Status = 401
+
+2024-03-12T13:07:42.412Z: [REQ] : 58bcab9d-32f9-4118-8908-366fce265b37 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-12T13:07:42.412Z: [INF] : 58bcab9d-32f9-4118-8908-366fce265b37 | Method = POST| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:07:42.412Z: [RES] : 58bcab9d-32f9-4118-8908-366fce265b37 | Response Status = 200
+
+2024-03-12T13:07:42.818Z: [REQ] : 8acf70ec-a32b-4093-a171-97989f602709 | Client Address = ::1, Request URL= http://localhost:8080/users/
+
+2024-03-12T13:07:42.818Z: [INF] : 8acf70ec-a32b-4093-a171-97989f602709 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:07:42.818Z: [RES] : 8acf70ec-a32b-4093-a171-97989f602709 | Response Status = 200
+
+2024-03-12T13:07:51.212Z: [REQ] : da629752-1275-4a39-b1c2-3bfdf34120e8 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:07:51.212Z: [INF] : da629752-1275-4a39-b1c2-3bfdf34120e8 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:07:51.212Z: [RES] : da629752-1275-4a39-b1c2-3bfdf34120e8 | Response Status = 304
+
+2024-03-12T13:08:24.217Z: [REQ] : 7246674f-d7fb-4f7a-8424-ea99679e35dc | Client Address = ::1, Request URL= http://localhost:8080/users/5
+
+2024-03-12T13:08:24.217Z: [INF] : 7246674f-d7fb-4f7a-8424-ea99679e35dc | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:08:24.217Z: [RES] : 7246674f-d7fb-4f7a-8424-ea99679e35dc | Response Status = 200
+
+2024-03-12T13:08:26.471Z: [REQ] : fa60e81b-1122-4ad0-a3da-8f8080296846 | Client Address = ::1, Request URL= http://localhost:8080/users/update-row/5
+
+2024-03-12T13:08:26.471Z: [INF] : fa60e81b-1122-4ad0-a3da-8f8080296846 | Method = PUT| Body = {"name":"Karen","email":"karen@mail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:08:26.471Z: [RES] : fa60e81b-1122-4ad0-a3da-8f8080296846 | Response Status = 200
+
+2024-03-12T13:08:30.568Z: [REQ] : 70a1a119-4da6-4ffb-9614-447783d167cc | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:08:30.568Z: [INF] : 70a1a119-4da6-4ffb-9614-447783d167cc | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:08:30.568Z: [RES] : 70a1a119-4da6-4ffb-9614-447783d167cc | Response Status = 200
+
+2024-03-12T13:10:49.854Z: [REQ] : 2517cbe8-f61e-4a47-9acd-d47d3fef5b67 | Client Address = ::1, Request URL= http://localhost:8080/users/6
+
+2024-03-12T13:10:49.854Z: [INF] : 2517cbe8-f61e-4a47-9acd-d47d3fef5b67 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:10:49.854Z: [RES] : 2517cbe8-f61e-4a47-9acd-d47d3fef5b67 | Response Status = 200
+
+2024-03-12T13:10:53.328Z: [REQ] : 2b7bcbd8-9136-48b8-98e5-7d06f51eb587 | Client Address = ::1, Request URL= http://localhost:8080/users/update-row/6
+
+2024-03-12T13:10:53.328Z: [INF] : 2b7bcbd8-9136-48b8-98e5-7d06f51eb587 | Method = PUT| Body = {"name":"Nikhil","email":"nikhil@gmail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:10:53.328Z: [RES] : 2b7bcbd8-9136-48b8-98e5-7d06f51eb587 | Response Status = 200
+
+2024-03-12T13:10:57.393Z: [REQ] : 8b860670-8f12-4bd2-9643-f5ddafac0452 | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:10:57.393Z: [INF] : 8b860670-8f12-4bd2-9643-f5ddafac0452 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:10:57.393Z: [RES] : 8b860670-8f12-4bd2-9643-f5ddafac0452 | Response Status = 200
+
+2024-03-12T13:18:04.319Z: [REQ] : c7da7042-338e-408d-9da5-7a79dfd035c2 | Client Address = ::1, Request URL= http://localhost:8080/api/login
+
+2024-03-12T13:18:04.319Z: [INF] : c7da7042-338e-408d-9da5-7a79dfd035c2 | Method = POST| Body = {"email":"admin1@gmail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:04.319Z: [RES] : c7da7042-338e-408d-9da5-7a79dfd035c2 | Response Status = 201
+
+2024-03-12T13:18:04.558Z: [REQ] : d45aa2fe-6b7a-4a97-8465-7d5aaf3bd1de | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:18:04.558Z: [INF] : d45aa2fe-6b7a-4a97-8465-7d5aaf3bd1de | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:04.558Z: [RES] : d45aa2fe-6b7a-4a97-8465-7d5aaf3bd1de | Response Status = 200
+
+2024-03-12T13:18:28.199Z: [REQ] : c560509a-9ebf-4202-b8e8-f588e3ec880a | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:18:28.199Z: [INF] : c560509a-9ebf-4202-b8e8-f588e3ec880a | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:28.199Z: [RES] : c560509a-9ebf-4202-b8e8-f588e3ec880a | Response Status = 200
+
+2024-03-12T13:18:29.805Z: [REQ] : 03250e6d-1ce9-4e3d-b530-ed0451f005d4 | Client Address = ::1, Request URL= http://localhost:8080/users/5
+
+2024-03-12T13:18:29.805Z: [INF] : 03250e6d-1ce9-4e3d-b530-ed0451f005d4 | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:29.805Z: [RES] : 03250e6d-1ce9-4e3d-b530-ed0451f005d4 | Response Status = 200
+
+2024-03-12T13:18:33.444Z: [REQ] : 3d146c71-a0f3-4b4c-9158-fc2cd7eaece6 | Client Address = ::1, Request URL= http://localhost:8080/users/update-row/5
+
+2024-03-12T13:18:33.444Z: [INF] : 3d146c71-a0f3-4b4c-9158-fc2cd7eaece6 | Method = PUT| Body = {"name":"Karen","email":"karen@gmail.com"} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:33.444Z: [RES] : 3d146c71-a0f3-4b4c-9158-fc2cd7eaece6 | Response Status = 200
+
+2024-03-12T13:18:37.510Z: [REQ] : 6eddeb2c-8c97-442a-91ca-0744d4ffee4d | Client Address = ::1, Request URL= http://localhost:8080/users
+
+2024-03-12T13:18:37.510Z: [INF] : 6eddeb2c-8c97-442a-91ca-0744d4ffee4d | Method = GET| Body = {} | Params = paramsMessage | Query = 
+
+2024-03-12T13:18:37.510Z: [RES] : 6eddeb2c-8c97-442a-91ca-0744d4ffee4d | Response Status = 200
+

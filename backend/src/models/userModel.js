@@ -18,13 +18,25 @@ function createUser(newUser, callback) {
 }
 
 function getAllUsers(callback) {
-    const query = 'SELECT * FROM students WHERE is_active = 1';
+    const query = `SELECT * FROM students WHERE is_active = 1`;
     connection.query(query, (err, results) => {
         if (err) {
             callback(err, null);
             return;
         }
         callback(null, results);
+    });
+}
+
+function countAllUsers(callback) {
+    const query = 'SELECT COUNT(*) AS total FROM users';
+    connection.query(query, (err, results) => {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        const totalCount = results[0].total;
+        callback(null, totalCount);
     });
 }
 
@@ -88,6 +100,7 @@ const getNumberOfStudents = () => {
 module.exports = {
     createUser,
     getAllUsers,
+    countAllUsers,
     getUserById,
     updateUserById,
     updatePartialUserById,

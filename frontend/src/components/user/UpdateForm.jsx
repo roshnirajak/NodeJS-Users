@@ -9,7 +9,7 @@ import Toast from './Toast';
 
 function UpdateForm() {
     const navigate = useNavigate();
-    const { id } = useParams('');
+    const { id } = useParams();
 
     const [user, setUser] = useState({
         name: '',
@@ -23,7 +23,7 @@ function UpdateForm() {
     const refresh_token = localStorage.getItem('refreshToken');
 
     useEffect(() => {
-
+        console.log("id", id)
         const getUser = async (e) => {
             try {
                 const response = await axios.get(`http://localhost:8080/users/${id}`, {

@@ -1,85 +1,51 @@
 const fs = require('fs');
 const path = require('path');
 const logFilePath = path.join(__dirname, '.', 'log.txt');
-
-const requestLogger = (req, res, next) => {
-    let uuid = '';
-
-    try {
-        if (req.body && req.body.login_user && req.body.login_user.uuid) {
-            uuid = req.body.login_user.uuid;
-        }
-    } catch (error) {
-        uuid = '';
-        console.error('Error getting UUID:', error);
-    }
-
-    console.log('uuid: ', uuid)
+class Logger {
     
-    const dateTime = new Date().toISOString();
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const method = req.method;
-    const requestedUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
-    const requestBody = { ...req.body };
-    delete requestBody.login_user;
-    let bodyMessage = '';
-    if (Object.keys(requestBody).length !== 0) {
-        bodyMessage = JSON.stringify(requestBody);
+    logRequest(dateTime, ipAddress, method, requestedUrl, uuid) {
+        const logMessage = `${dateTime}: [REQ] : ${uuid} | Client Address = ${ipAddress}, Request URL= ${requestedUrl}\n`;
+        this.writeLogs(logMessage);
     }
 
+    logResponse(dateTime, statusCode, uuid) {
+        const logMessage = `${dateTime}: [RES] : ${uuid} | Response Status = ${statusCode}\n`;
+        this.writeLogs(logMessage);
+    }
 
-    const logMessage = `[REQ] : ${dateTime} ${uuid} | [${method}] URL = ${requestedUrl} | Client Address = ${ipAddress}`;
-    const fullLogMessage = bodyMessage ? `${logMessage} | Params: ${bodyMessage}\n` : `${logMessage}\n`;
+    logError(dateTime, errorMessage, uuid) {
+        const logMessage = `${dateTime}: [ERR] : ${uuid} | Message = ${errorMessage}\n`;
+        this.writeLogs(logMessage);
+    }
 
-    console.log(logMessage);
+    logWarning(dateTime, warningMessage, uuid) {
+        const logMessage = `${dateTime}: [WAR] : ${uuid} | Message = ${warningMessage}\n`;
+        this.writeLogs(logMessage);
+    }
 
-    fs.appendFile(logFilePath, fullLogMessage, (err) => {
-        if (err) {
-            console.error('Error writing to log file:', err);
-        }
-    });
-    next();
-};
+    logDebug(dateTime, debugMessage, uuid = '') {
+        const logMessage = `${dateTime}; [DEB] : ${uuid} | Message = ${debugMessage}\n`;
+        this.writeLogs(logMessage);
+    }
 
-const responseLogger = (req, res, next) => {
-    const dateTime = new Date().toISOString();
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const method = req.method;
-    const requestedUrl = req.originalUrl;
+    logInfo(dateTime, uuid, body, params, query, method) {
+        const logMessage = `${dateTime}: [INF] : ${uuid} | Method = ${method}| Body = ${body} | Params = ${params} | Query = ${query}\n`;
+        this.writeLogs(logMessage);
+    }
 
-    res.on('finish', () => {
-        const { statusCode } = res;
-        const logMessage = `[RES] : ${dateTime} | [${method}] | Response Status = ${statusCode}\n`;
-        console.log(logMessage);
-        fs.appendFile(logFilePath, logMessage, (err) => {
+    logStartServer() {
+        const logMessage = `Server started`;
+        this.writeLogs(logMessage);
+    }
+
+    writeLogs(logMessage) {
+        fs.appendFile(logFilePath, `${logMessage}\n`, (err) => {
             if (err) {
-                console.error('Error writing to log file:', err);
+                console.error('Error writing log:', err);
             }
         });
-    });
-    next();
-};
-
-const errorLogger = (err, req, res, next) => {
-    const dateTime = new Date().toISOString();
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const method = req.method;
-    const requestedUrl = req.originalUrl;
-
-    const logMessage = `[ERROR] : ${dateTime} | [${method}] URL = ${requestedUrl} | Client Address = ${ipAddress} | Error = ${err.message}\n`;
-    console.error(logMessage);
-
-    fs.appendFile(logFilePath, logMessage, (err) => {
-        if (err) {
-            console.error('Error writing to log file:', err);
-        }
-    });
-    next(err);
-};
-
-module.exports = {
-    requestLogger,
-    responseLogger,
-    errorLogger
+    }
 }
+
+module.exports = Logger;

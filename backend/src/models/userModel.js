@@ -17,19 +17,69 @@ function createUser(newUser, callback) {
     });
 }
 
-function getAllUsers(callback) {
-    const query = `SELECT * FROM students WHERE is_active = 1`;
+function getAllUsers(pageNumber, usersPerPage, callback) {
+    const offset = (pageNumber - 1) * usersPerPage;
+    const query = `
+    SELECT s.*, c.course_name 
+    FROM students s
+    LEFT JOIN course c ON s.course_id = c.course_id
+    WHERE s.is_active = 1 
+    LIMIT ${usersPerPage} OFFSET ${offset}
+    `;
+
+    const countQuery = `SELECT COUNT(*) AS totalCount FROM students WHERE is_active = 1`;
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            callback(err, null, 0);
+            return;
+        }
+
+        connection.query(countQuery, (countErr, countResult) => {
+            if (countErr) {
+                callback(countErr, null, 0);
+                return;
+            }
+
+            const totalCount = countResult[0].totalCount;
+            callback(null, results, totalCount);
+        });
+    });
+
+}
+
+
+function getUsersWithSearch(searchTerm, pageNumber, usersPerPage, callback) {
+    const offset = (pageNumber - 1) * usersPerPage;
+    let query = `SELECT * FROM students WHERE is_active = 1`;
+    let countQuery = `SELECT COUNT(*) AS totalCount FROM students WHERE is_active = 1`;
+
+    if (searchTerm) {
+        query += ` AND (name LIKE '%${searchTerm}%' OR email LIKE '%${searchTerm}%')`;
+        countQuery += ` AND (name LIKE '%${searchTerm}%' OR email LIKE '%${searchTerm}%')`;
+    }
+
+    query += ` LIMIT ${usersPerPage} OFFSET ${offset}`;
+
     connection.query(query, (err, results) => {
         if (err) {
             callback(err, null);
             return;
         }
-        callback(null, results);
+
+        connection.query(countQuery, (countErr, countResult) => {
+            if (countErr) {
+                callback(countErr, null, 0);
+                return;
+            }
+            const totalCount = countResult[0].totalCount;
+            callback(null, results, totalCount);
+        });
     });
 }
 
 function countAllUsers(callback) {
-    const query = 'SELECT COUNT(*) AS total FROM users';
+    const query = 'SELECT COUNT(*) AS total FROM students WHERE';
     connection.query(query, (err, results) => {
         if (err) {
             callback(err, null);
@@ -100,6 +150,7 @@ const getNumberOfStudents = () => {
 module.exports = {
     createUser,
     getAllUsers,
+    getUsersWithSearch,
     countAllUsers,
     getUserById,
     updateUserById,

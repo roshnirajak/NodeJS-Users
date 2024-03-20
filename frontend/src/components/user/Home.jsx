@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import Toast from './Toast';
+import ReactPaginate from 'react-paginate';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -12,46 +13,22 @@ const HomePage = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    //get token
     const token = localStorage.getItem('accessToken');
     const refresh_token = localStorage.getItem('refreshToken');
 
-    const [showForm, setShowForm] = useState(false);
 
-    const handleShowForm = () => {
-        setShowForm(true);
-    };
-    const handleHideForm = () => {
-        setShowForm(false);
-    };
-
-
-    const handleDelete = async (id) => {
+    const getAllUsers = async () => {
         try {
-            const response = await axios.delete(`http://localhost:8080/users/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            // console.log(response.data);
-            getAllUsers();
-            toast.success(response.data.message)
-        } catch (error) {
-            console.error('Error deleting user:', error);
-            toast.error(error.response.data.error)
-        }
-    };
-
-    useEffect(() => {
-        getAllUsers();
-    }, []);
-    const getAllUsers = async (pageNumber = 1) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/users`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(`http://localhost:8080/users/get-all`,
+                {
+                    params: {
+                        page:1,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
             if (response) {
                 // console.log(response.data);
@@ -78,7 +55,7 @@ const HomePage = () => {
                         localStorage.setItem('accessToken', newAccessToken)
                         localStorage.setItem('refreshToken', newRefreshToken)
 
-                        const retryResponse = await axios.get('http://localhost:8080/users/', {
+                        const retryResponse = await axios.get('http://localhost:8080/users/get-all/', {
                             headers: {
                                 Authorization: `Bearer ${newAccessToken}`
                             }
@@ -102,12 +79,42 @@ const HomePage = () => {
             }
         }
     };
+    const handleDelete = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/users/delete/`,
+                {
+                    params: {
+                        id: id,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+            // console.log(response.data);
+            getAllUsers();
+            toast.success(response.data.message)
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            toast.error(error.response.data.error)
+        }
+    };
+
+
+    //show pop up form
+    const [showForm, setShowForm] = useState(false);
+    const handleShowForm = () => {
+        setShowForm(true);
+    };
+    const handleHideForm = () => {
+        setShowForm(false);
+    };
     const handleCreateStudent = async (e) => {
         e.preventDefault();
         // console.log("email: ", email, "name: ", name)
         try {
             const response = await axios.post(
-                'http://localhost:8080/users/',
+                'http://localhost:8080/users/create/',
                 { name, email },
                 {
                     headers: {
@@ -141,6 +148,11 @@ const HomePage = () => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options);
     };
+
+    useEffect(() => {
+        getAllUsers();
+    }, []);
+
     return (
         <div>
             {loading ? (
@@ -190,62 +202,8 @@ const HomePage = () => {
                         </div>
                     )}
                     <Toast />
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    User ID
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Full Name
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Email
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Created At
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Update
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Delete
-                                </th>
-                            </tr>
 
-                        </thead>
-                        <tbody>
-                            {users.map(user => (
-                                <tr key={user.student_id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {user.id}
-                                    </th> */}
-                                    <td className="px-6 py-4">
-                                        {user.student_id}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {user.name}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {user.email}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {formatDate(user.created_at)}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <Link to={`/update/${user.student_id}`}>
-                                            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update</button>
-                                        </Link>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <button type="button" onClick={() => handleDelete(user.student_id)} className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
-
-                                    </td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                    </table>
+                   
                 </div>
             )}
         </div>

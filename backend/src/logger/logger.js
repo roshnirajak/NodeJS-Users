@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const logFilePath = path.join(__dirname, '.', 'log.txt');
 class Logger {
-    
+    constructor() {
+        this.logsDir = path.join(__dirname, '.'); // Logs directory is the same as the script's directory
+    }
 
     logRequest(dateTime, ipAddress, method, requestedUrl, uuid) {
         const logMessage = `${dateTime}: [REQ] : ${uuid} | Client Address = ${ipAddress}, Request URL= ${requestedUrl}\n`;
@@ -39,7 +41,24 @@ class Logger {
         this.writeLogs(logMessage);
     }
 
+
+    getCurrentDate() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+    getLogFilePath() {
+        const currentDate = this.getCurrentDate();
+        const logFileName = `${currentDate}.log`;
+        return path.join(this.logsDir, logFileName);
+    }
+
     writeLogs(logMessage) {
+        const logFilePath = this.getLogFilePath();
+
         fs.appendFile(logFilePath, `${logMessage}\n`, (err) => {
             if (err) {
                 console.error('Error writing log:', err);

@@ -1,16 +1,18 @@
+const express = require('express');
+const app = express();
 const Logger = require('../logger/logger');
 const { v4: uuidv4 } = require('uuid');
 const logger = new Logger('path/to/logfile.txt');
 
-
+app.use(express.json());
 
 const loggerMiddleware = (req, res, next) => {
-
+    const { params } = req;
     console.log("started")
     console.log("body", req.body);
-    console.log("rawHeders", req.rawHeaders); //array
-    console.log("res", req.res); //object
-    console.log("params", req.params); //object 
+    // console.log("rawHeders", req.rawHeaders); //array
+    // console.log("res", req.res); //object
+    console.log("query", req.query); //object 
 
 
     const dateTime = new Date().toISOString();
@@ -19,12 +21,15 @@ const loggerMiddleware = (req, res, next) => {
     const requestedUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const uuid = uuidv4();
 
-    console.log("Test Params: ",`${JSON.stringify(req.params)}`) 
-    console.log(res)
+    // console.log("Test Params: ",`${JSON.stringify(req.params)}`) 
+    // console.log(req)
 
 
     const requestBody = { ...req.body };
     let bodyMessage = JSON.stringify(requestBody);
+
+    const requestParams = { ...req.params };
+    let paramsMessage = JSON.stringify(requestParams);
 
     const requestQuery = { ...req.query };
     let queryMessage = '';
@@ -38,7 +43,7 @@ const loggerMiddleware = (req, res, next) => {
 
     // Log the request
     logger.logRequest(dateTime, ipAddress, method, requestedUrl, uuid);
-    logger.logInfo(dateTime, uuid, bodyMessage, "paramsMessage", queryMessage, req.method);
+    logger.logInfo(dateTime, uuid, bodyMessage, paramsMessage, queryMessage, req.method);
 
     // Log the response
     const originalEnd = res.end;

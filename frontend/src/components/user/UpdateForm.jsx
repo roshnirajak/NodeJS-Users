@@ -26,7 +26,11 @@ function UpdateForm() {
         console.log("id", id)
         const getUser = async (e) => {
             try {
-                const response = await axios.get(`http://localhost:8080/users/${id}`, {
+                const response = await axios.get(`http://localhost:8080/users/get-one`, 
+                {
+                    params:{
+                        id: id
+                    },
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -45,7 +49,7 @@ function UpdateForm() {
                         const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
                             headers: {
                                 Authorization: `Bearer ${refresh_token}`
-                            }
+                            }   
                         });
                         if (refreshResponse) {
                             const newAccessToken = refreshResponse.data.accessToken;
@@ -85,12 +89,18 @@ function UpdateForm() {
         const updatedUser = { name, email };
 
         try {
-            const response = await axios.put(`http://localhost:8080/users/update-row/${user.student_id}`, updatedUser, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-
+            const response = await axios.put(
+                `http://localhost:8080/users/update-row`,
+                { ...updatedUser },  // Spread the updatedUser object
+                {
+                    params: {
+                        id: user.student_id
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            });
+            );
             //   console.log(response)
             toast.success(response.data.message);
             setTimeout(() => {

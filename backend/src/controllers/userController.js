@@ -7,18 +7,34 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 function getAllUsers(req, res) {
-    userModel.getAllUsers((err, users) => {
-        if (err) {
-            console.error('Error getting users:', err);
-            return res.status(500).json({ error: 'Internal Server Error' });
-        }
-        res.json(users);
-    });
+    const { page, usersPerPage, search } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const perPage = parseInt(usersPerPage) || 5;
+
+    if (search) {
+        userModel.getUsersWithSearch(search, pageNumber, perPage, (err, users, totalCount) => {
+            if (err) {
+                console.error('Error getting users:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            const totalPages = Math.ceil(totalCount / perPage);
+            res.json({ users, totalPages, totalCount });
+        });
+    } else {
+        userModel.getAllUsers(pageNumber, perPage, (err, users, totalCount) => {
+            if (err) {
+                console.error('Error getting users:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            const totalPages = Math.ceil(totalCount / perPage);
+            res.json({ users, totalPages, totalCount });
+        });
+    }
 }
 
 
 function getUserById(req, res) {
-    const userId = req.params.id;
+    const userId = req.query.id;
 
     userModel.getUserById(userId, (err, user) => {
         if (err) {
@@ -79,7 +95,7 @@ function updateUserById(req, res) {
         email: Joi.string().email().required()
     });
 
-    const userId = req.params.id;
+    const userId = req.query.id;
     const updatedUser = {
         name: req.body.name,
         email: req.body.email
@@ -153,7 +169,8 @@ function deleteUserById(req, res) {
 
 function deactivateUserById(req, res) {
     const login_user = req.body.login_user;
-    const userId = parseInt(req.params.id);
+    const userId = req.query.id;
+    // const userId = parseInt(req.params.id);
     console.log("UserId:", userId)
     const updatedUser = {
         is_active: 0,

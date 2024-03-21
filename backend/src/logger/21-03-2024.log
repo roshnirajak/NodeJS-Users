@@ -82,3 +82,15 @@
 
 2024-03-21T08:24:13.333Z: [RES] : 575987eb-b35c-4d02-bb5f-9cb7fe781d5a | Response Status = 304
 
+2024-03-21T08:26:57.714Z: [REQ] : a7c7143f-48e8-4ce2-9e3c-97a0b21c1913 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-03-21T08:26:57.714Z: [INF] : a7c7143f-48e8-4ce2-9e3c-97a0b21c1913 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-03-21T08:26:57.714Z: [RES] : a7c7143f-48e8-4ce2-9e3c-97a0b21c1913 | Response Status = 304
+
+2024-03-21T08:26:57.729Z: [REQ] : 6a73d4a2-4249-44b0-92fc-b456f0db31b9 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-03-21T08:26:57.729Z: [INF] : 6a73d4a2-4249-44b0-92fc-b456f0db31b9 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-03-21T08:26:57.729Z: [RES] : 6a73d4a2-4249-44b0-92fc-b456f0db31b9 | Response Status = 304
+

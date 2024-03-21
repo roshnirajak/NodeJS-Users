@@ -8,7 +8,6 @@ import UpdateForm from './components/user/UpdateForm';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 
-import Test from './components/user/test';
 import './App.css'
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
           <Route path="/update/:id" element={<UpdateForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/check-log" element={<CheckLog />} />
-          <Route path="/test" element={<Test />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

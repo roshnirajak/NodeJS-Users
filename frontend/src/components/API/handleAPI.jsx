@@ -1,108 +1,81 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { Link, useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:8080';
+const navigate = useNavigate();
+//get token
+const token = localStorage.getItem('accessToken');
+const refresh_token = localStorage.getItem('refreshToken');
 
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-const apiRequest = async (method, url, data = null, token = null) => {
-  try {
-    let config = {
-      method: method,
-      url: url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    if (method === 'GET' || method === 'DELETE') {
-      config['params'] = data;
-    } else {
-      config['data'] = data;
-    }
-
-    const response = await axiosInstance(config);
-    return response.data;
-  } catch (error) {
-    if (error.response && error.response.status === 401) {
-      console.log('Access Token expired. Refreshing token...');
-      const refresh_token = Cookies.get('refreshToken');
-
-      try {
-        const refreshResponse = await axios.post(
-          `${API_BASE_URL}/api/refresh-token/`,
-          null,
-          {
+const useAPI = () => {
+  const getAllUsers = async (pageNumber, perPage) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/users/get-all`,
+        {
+          params: {
+            page: pageNumber,
+            usersPerPage: perPage,
+            search: searchTerm,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        console.log('Access Token expired. Refreshing token...');
+        console.log("refresh token: ", refresh_token)
+        try {
+          const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
             headers: {
-              Authorization: `Bearer ${refresh_token}`,
-            },
+              Authorization: `Bearer ${refresh_token}`
+            }
+          });
+          if (refreshResponse) {
+            const newAccessToken = refreshResponse.data.accessToken;
+            const newRefreshToken = refreshResponse.data.refreshToken;
+
+            localStorage.setItem('accessToken', newAccessToken)
+            localStorage.setItem('refreshToken', newRefreshToken)
+
+            const retryResponse = await axios.get('http://localhost:8080/users/get-all/',
+              {
+                params: {
+                  page: pageNumber,
+                  usersPerPage: perPage,
+                  search: searchTerm,
+                },
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            return response.data
           }
-        );
-        if (refreshResponse) {
-          const newAccessToken = refreshResponse.data.accessToken;
-          const newRefreshToken = refreshResponse.data.refreshToken;
 
-          Cookies.set('accessToken', newAccessToken, {
-            expires: 1,
-            secure: true,
-            sameSite: 'None',
-          });
-          Cookies.set('refreshToken', newRefreshToken, {
-            expires: 7,
-            secure: true,
-            sameSite: 'None',
-          });
-
-          const retryResponse = await axiosInstance({
-            method: method,
-            url: url,
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${newAccessToken}`,
-            },
-            params: method === 'GET' || method === 'DELETE' ? data : null,
-            data: method === 'POST' || method === 'PUT' || method === 'PATCH' ? data : null,
-          });
-
-          console.log('Retried request:', retryResponse.data);
-          return retryResponse.data;
+        } catch (refreshError) {
+          console.log('Error refreshing token:');
+          console.clear();
+          navigate('/login')
         }
-      } catch (refreshError) {
-        console.clear();
-        window.location.href='/login'
+        finally {
+        }
       }
-    } else {
-      console.error('API Request Error:', error.response.data);
-      throw error.response.data;
+      else {
+        console.clear();
+        navigate('/login')
+      }
     }
-  }
-};
+  };
 
-export const get = async (url, token, params={}) => {
-  return apiRequest('GET', url, params, token);
-};
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/courses');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      return [];
+    }
+  };
 
-export const post = async (url, token, data = {}) => {
-  return apiRequest('POST', url, data, token);
-};
-
-export const put = async (url, token, data = {}) => {
-  return apiRequest('PUT', url, data, token);
-};
-
-export const del = async (url, token, params = {}) => {
-  return apiRequest('DELETE', url, params, token);
-};
-
-export const patch = async (url, token, data = {}) => {
-  return apiRequest('PATCH', url, data, token);
-};
+}
+export { fetchCourses, getAllUsers };

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { get, post, put, del, patch } from '../API/handleAPI';
 import { toast } from 'react-toastify';
 import Toast from './Toast';
 

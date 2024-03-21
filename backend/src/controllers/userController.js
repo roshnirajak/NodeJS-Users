@@ -7,31 +7,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 function getAllUsers(req, res) {
-    const { page, usersPerPage, search } = req.query;
+    const { page, usersPerPage, search, course } = req.query;
     const pageNumber = parseInt(page) || 1;
     const perPage = parseInt(usersPerPage) || 5;
 
-    if (search) {
-        userModel.getUsersWithSearch(search, pageNumber, perPage, (err, users, totalCount) => {
-            if (err) {
-                console.error('Error getting users:', err);
-                return res.status(500).json({ error: 'Internal Server Error' });
-            }
-            const totalPages = Math.ceil(totalCount / perPage);
-            res.json({ users, totalPages, totalCount });
-        });
-    } else {
-        userModel.getAllUsers(pageNumber, perPage, (err, users, totalCount) => {
-            if (err) {
-                console.error('Error getting users:', err);
-                return res.status(500).json({ error: 'Internal Server Error' });
-            }
-            const totalPages = Math.ceil(totalCount / perPage);
-            res.json({ users, totalPages, totalCount });
-        });
-    }
+    userModel.getUsersWithSearch(search, course, pageNumber, perPage, (err, users, totalCount) => {
+        if (err) {
+            console.error('Error getting users:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        const totalPages = Math.ceil(totalCount / perPage);
+        res.json({ users, totalPages, totalCount });
+    });
 }
-
 
 function getUserById(req, res) {
     const userId = req.query.id;
@@ -67,7 +55,8 @@ const createStudent = async (req, res) => {
         uuid: uuidv4(),
         student_id: totalStudents + 1,
         name: value.name,
-        email: value.email
+        email: value.email,
+        course_id: req.body.courseId,
     };
 
     userModel.createUser(newStudent, (err, result) => {
@@ -80,7 +69,8 @@ const createStudent = async (req, res) => {
             uuid: newStudent.uuid,
             student_id: newStudent.id,
             name: newStudent.name,
-            email: newStudent.email
+            email: newStudent.email,
+            course_id: newStudent.course_id,
         };
 
         return res.status(200).json({ message: 'Student created successfully', student: createdStudent });

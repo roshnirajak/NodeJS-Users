@@ -20,11 +20,12 @@ function createUser(newUser, callback) {
 function getAllUsers(pageNumber, usersPerPage, callback) {
     const offset = (pageNumber - 1) * usersPerPage;
     const query = `
-    SELECT s.*, c.course_name 
-    FROM students s
-    LEFT JOIN course c ON s.course_id = c.course_id
-    WHERE s.is_active = 1 
-    LIMIT ${usersPerPage} OFFSET ${offset}
+        SELECT s.*, c.course_name 
+        FROM students s
+        LEFT JOIN course c ON s.course_id = c.course_id
+        WHERE s.is_active = 1 
+        ORDER BY s.created_at DESC
+        LIMIT ${usersPerPage} OFFSET ${offset}
     `;
 
     const countQuery = `SELECT COUNT(*) AS totalCount FROM students WHERE is_active = 1`;
@@ -49,17 +50,31 @@ function getAllUsers(pageNumber, usersPerPage, callback) {
 }
 
 
-function getUsersWithSearch(searchTerm, pageNumber, usersPerPage, callback) {
+function getUsersWithSearch(searchTerm, courseId, pageNumber, usersPerPage, callback) {
     const offset = (pageNumber - 1) * usersPerPage;
-    let query = `SELECT * FROM students WHERE is_active = 1`;
-    let countQuery = `SELECT COUNT(*) AS totalCount FROM students WHERE is_active = 1`;
+    let query = `
+        SELECT s.*, c.course_name
+        FROM students s
+        LEFT JOIN course c ON s.course_id = c.course_id
+        WHERE s.is_active = 1`;
+
+    let countQuery = `
+        SELECT COUNT(*) AS totalCount
+        FROM students s
+        LEFT JOIN course c ON s.course_id = c.course_id
+        WHERE s.is_active = 1`;
 
     if (searchTerm) {
-        query += ` AND (name LIKE '%${searchTerm}%' OR email LIKE '%${searchTerm}%')`;
-        countQuery += ` AND (name LIKE '%${searchTerm}%' OR email LIKE '%${searchTerm}%')`;
+        query += ` AND (s.name LIKE '%${searchTerm}%' OR s.email LIKE '%${searchTerm}%')`;
+        countQuery += ` AND (s.name LIKE '%${searchTerm}%' OR s.email LIKE '%${searchTerm}%')`;
     }
 
-    query += ` LIMIT ${usersPerPage} OFFSET ${offset}`;
+    if (courseId) {
+        query += ` AND s.course_id = '${courseId}'`;
+        countQuery += ` AND s.course_id = '${courseId}'`;
+    }
+
+    query += ` ORDER BY s.created_at DESC LIMIT ${usersPerPage} OFFSET ${offset}`;
 
     connection.query(query, (err, results) => {
         if (err) {

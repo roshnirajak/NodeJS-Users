@@ -3966,3 +3966,75 @@
 
 2024-03-22T14:52:45.216Z: [RES] : 24e47410-9478-432f-ba4c-72dfe6e1292a | Response Status = 304
 
+2024-03-22T15:00:39.712Z: [REQ] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-03-22T15:00:39.712Z: [INF] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-03-22T15:00:39.712Z: [ERR] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Message = [object Object]
+
+2024-03-22T15:00:39.712Z: [ERR] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-22T15:00:39.712Z: [RES] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Response Status = 401
+
+2024-03-22T15:00:39.712Z: [RES] : ff04ace0-78d3-42e2-835c-b6a7294b5b1b | Response Status = 401
+
+2024-03-22T15:00:40.284Z: [REQ] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification-count
+
+2024-03-22T15:00:40.284Z: [INF] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-03-22T15:00:40.284Z: [ERR] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Message = [object Object]
+
+2024-03-22T15:00:40.284Z: [ERR] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-22T15:00:40.284Z: [RES] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Response Status = 401
+
+2024-03-22T15:00:40.284Z: [RES] : 6e615d60-3cd3-49cf-a364-931e94a50fae | Response Status = 401
+
+2024-03-22T15:00:40.294Z: [REQ] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-03-22T15:00:40.294Z: [INF] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-03-22T15:00:40.294Z: [ERR] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Message = [object Object]
+
+2024-03-22T15:00:40.294Z: [ERR] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-22T15:00:40.294Z: [RES] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Response Status = 401
+
+2024-03-22T15:00:40.294Z: [RES] : ab2adec6-3864-4112-b316-bf43b7a7ad36 | Response Status = 401
+
+2024-03-22T15:00:40.309Z: [REQ] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-03-22T15:00:40.309Z: [INF] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-03-22T15:00:40.309Z: [ERR] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Message = [object Object]
+
+2024-03-22T15:00:40.309Z: [ERR] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-22T15:00:40.309Z: [RES] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Response Status = 401
+
+2024-03-22T15:00:40.309Z: [RES] : 7c2778b5-be99-4caa-ba74-3a933f089a11 | Response Status = 401
+
+2024-03-22T15:00:40.326Z: [REQ] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-22T15:00:40.326Z: [INF] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-03-22T15:00:40.326Z: [ERR] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Message = [object Object]
+
+2024-03-22T15:00:40.326Z: [ERR] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-03-22T15:00:40.326Z: [RES] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Response Status = 401
+
+2024-03-22T15:00:40.326Z: [RES] : e06bbfff-6846-479d-b168-d94fea7b4d57 | Response Status = 401
+
+2024-03-22T15:00:40.337Z: [REQ] : 045f704c-9575-48c6-9759-6155acdea392 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-22T15:00:40.337Z: [INF] : 045f704c-9575-48c6-9759-6155acdea392 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-03-22T15:00:40.337Z: [ERR] : 045f704c-9575-48c6-9759-6155acdea392 | Message = [object Object]
+
+2024-03-22T15:00:40.337Z: [ERR] : 045f704c-9575-48c6-9759-6155acdea392 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-03-22T15:00:40.337Z: [RES] : 045f704c-9575-48c6-9759-6155acdea392 | Response Status = 401
+
+2024-03-22T15:00:40.337Z: [RES] : 045f704c-9575-48c6-9759-6155acdea392 | Response Status = 401
+

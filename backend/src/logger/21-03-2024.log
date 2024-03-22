@@ -94,3 +94,45 @@
 
 2024-03-21T08:26:57.729Z: [RES] : 6a73d4a2-4249-44b0-92fc-b456f0db31b9 | Response Status = 304
 
+2024-03-21T08:30:14.046Z: [REQ] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-03-21T08:30:14.046Z: [INF] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-03-21T08:30:14.046Z: [ERR] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-21T08:30:14.046Z: [ERR] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Message = [object Object]
+
+2024-03-21T08:30:14.046Z: [RES] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Response Status = 401
+
+2024-03-21T08:30:14.046Z: [RES] : c84152a7-a4da-4e6c-8b28-df4c381891e3 | Response Status = 401
+
+2024-03-21T08:30:14.063Z: [REQ] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-03-21T08:30:14.063Z: [INF] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-03-21T08:30:14.063Z: [ERR] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Message = [object Object]
+
+2024-03-21T08:30:14.063Z: [ERR] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-21T08:30:14.063Z: [RES] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Response Status = 401
+
+2024-03-21T08:30:14.063Z: [RES] : 3ef67b11-b483-461e-be2f-1b1053f1e5e9 | Response Status = 401
+
+2024-03-21T08:30:14.098Z: [REQ] : 6cd65058-1aa5-490f-bf34-4c6e5f36e019 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-03-21T08:30:14.098Z: [INF] : 6cd65058-1aa5-490f-bf34-4c6e5f36e019 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-03-21T08:30:14.098Z: [RES] : 6cd65058-1aa5-490f-bf34-4c6e5f36e019 | Response Status = 200
+
+2024-03-21T08:30:14.134Z: [REQ] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all/?page=1&usersPerPage=5&search=
+
+2024-03-21T08:30:14.134Z: [ERR] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-03-21T08:30:14.134Z: [RES] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Response Status = 401
+
+2024-03-21T08:30:14.134Z: [RES] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Response Status = 401
+
+2024-03-21T08:30:14.134Z: [INF] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":""}
+
+2024-03-21T08:30:14.134Z: [ERR] : 6f816eeb-0753-4d5e-8e7e-70a7f835d760 | Message = [object Object]
+

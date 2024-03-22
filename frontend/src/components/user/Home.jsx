@@ -76,9 +76,9 @@ const HomePage = () => {
                                 },
                             });
 
-                        setUsers(response.data.users);
-                        setTotalPages(response.data.totalPages);
-                        setTotalStudents(response.data.totalCount)
+                        setUsers(retryResponse.data.users);
+                        setTotalPages(retryResponse.data.totalPages);
+                        setTotalStudents(retryResponse.data.totalCount)
                     }
 
                 } catch (refreshError) {
@@ -129,7 +129,7 @@ const HomePage = () => {
             toast.error(error.response.data.error)
         }
     };
-    
+
     const columns = [
         // Define your table columns here
         {
@@ -222,6 +222,7 @@ const HomePage = () => {
                             onChange={handleSearch}
                             className="form-control mr-2"
                         />
+
                         <select
                             id="course"
                             value={courseId}
@@ -230,9 +231,10 @@ const HomePage = () => {
                             }}
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             required
-                        > <option value="">All Courses</option>
+                        > 
+                        <option value="">All Courses</option>
                             {courses.map((course) => (
-                                
+
                                 <option key={course.course_id} value={course.course_id}>
                                     {course.course_name}
                                 </option>

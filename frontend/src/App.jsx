@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom
 import Navbar from './components/navbar/Navbar';
 import HomePage from './components/user/Home';
 import Profile from './components/user/Profile';
-import CheckLog from './components/user/CheckLog';
 import UpdateForm from './components/user/UpdateForm';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-
+import StudentDetails from './components/user/StudentDetails';
 import './App.css'
 
 function App() {
@@ -29,7 +28,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="/update/:id" element={<UpdateForm />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/check-log" element={<CheckLog />} />
+          <Route path="/student/:studentId"  element={<StudentDetails/>} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

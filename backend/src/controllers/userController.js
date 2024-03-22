@@ -1,7 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
+const authModel= require('../models/authModel')
 const userModel = require('../models/userModel');
+const notificationModel = require('../models/notificationModel')
 const logger = require('../logger/logger');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -37,7 +39,11 @@ function getUserById(req, res) {
 };
 
 const createStudent = async (req, res) => {
-    const login_user = req.body.login_user;
+    const user = req.body.login_user;
+    const admin = await authModel.getAdminByEmail(user.email);
+    if (!admin) {
+        return res.status(404).json({ error: 'Admin data not found' });
+    }
     const totalStudents = await userModel.getNumberOfStudents();
 
     const studentSchema = Joi.object({
@@ -65,6 +71,7 @@ const createStudent = async (req, res) => {
             return res.status(500).json({ error: 'Failed to create student' });
         }
 
+
         const createdStudent = {
             uuid: newStudent.uuid,
             student_id: newStudent.id,
@@ -72,20 +79,31 @@ const createStudent = async (req, res) => {
             email: newStudent.email,
             course_id: newStudent.course_id,
         };
+        const action = 'created';
+        notificationModel.addNotification(admin.admin_id, newStudent.student_id, action, (err, notificationResult) => {
+            if (err) {
+                console.error('Error adding notification:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
 
-        return res.status(200).json({ message: 'Student created successfully', student: createdStudent });
+            return res.status(200).json({ message: 'Student created successfully', student: createdStudent });
+        });
     });
 };
 
 
-function updateUserById(req, res) {
-
+const updateUserById = async (req, res) => {
+    const user = req.body.login_user;
+    const admin = await authModel.getAdminByEmail(user.email);
+    if (!admin) {
+        return res.status(404).json({ error: 'Admin data not found' });
+    }
     const userSchema = Joi.object({
         name: Joi.string().min(3).required(),
         email: Joi.string().email().required()
     });
 
-    const userId = req.query.id;
+    const student_id = req.query.id;
     const updatedUser = {
         name: req.body.name,
         email: req.body.email
@@ -97,12 +115,22 @@ function updateUserById(req, res) {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    userModel.updateUserById(userId, value, (err, result) => {
+    userModel.updateUserById(student_id, value, (err, result) => {
         if (err) {
             console.error('Error updating user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        res.status(200).json({ message: 'User updated successfully', user: result });
+
+        // Add a notification when user is updated
+        const action = 'updated';
+        notificationModel.addNotification(admin.admin_id, student_id, action, (err, notificationResult) => {
+            if (err) {
+                console.error('Error adding notification:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            res.status(200).json({ message: 'User updated successfully', user: result });
+        });
     });
 }
 
@@ -141,6 +169,7 @@ function updatePartialUserById(req, res) {
             console.error('Error updating user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
+
         res.json({ message: 'User updated-partially successfully', user: result });
     });
 }
@@ -157,21 +186,35 @@ function deleteUserById(req, res) {
     });
 }
 
-function deactivateUserById(req, res) {
-    const login_user = req.body.login_user;
-    const userId = req.query.id;
+const deactivateUserById = async(req, res) =>{
+    const user = req.body.login_user;
+    const admin = await authModel.getAdminByEmail(user.email);
+    if (!admin) {
+        return res.status(404).json({ error: 'Admin data not found' });
+    }
+    
+    const student_id = req.query.id;
     // const userId = parseInt(req.params.id);
-    console.log("UserId:", userId)
+
     const updatedUser = {
         is_active: 0,
     };
 
-    userModel.updateUserById(userId, updatedUser, (err, result) => {
+    userModel.updateUserById(student_id, updatedUser, (err, result) => {
         if (err) {
             console.error('Error deactivating user:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        res.status(200).json({ message: 'User deactivated successfully', user: result });
+        const action = 'deleted';
+        notificationModel.addNotification(admin.admin_id, student_id, action, (err, notificationResult) => {
+            if (err) {
+                console.error('Error adding notification:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            res.status(200).json({ message: 'User deactivated successfully', user: result });
+        });
+        
     });
 }
 

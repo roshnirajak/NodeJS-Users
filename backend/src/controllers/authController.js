@@ -137,9 +137,8 @@ async function changePassword(req, res) {
     const oldPassword = req.headers.oldpassword;
     const newPassword = req.headers.newpassword;
 
-    console.log("oldPassword", oldPassword);
-    console.log("newPassword", newPassword);
     console.log("email", email)
+
     // Validate newPassword
     const schema = Joi.object({
         newPassword: Joi.string().min(6).required()
@@ -189,11 +188,7 @@ async function changePassword(req, res) {
 function refreshToken(req, res) {
     const authHeader = req.headers['authorization']
 
-    console.log(authHeader);
-
     let refresh_token = authHeader && authHeader.split(' ')[1];
-
-    console.log("REFRESH_TOKEN2", refresh_token);
 
     if (refresh_token == null) {
         res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
@@ -226,8 +221,8 @@ function refreshToken(req, res) {
                 refreshToken: refreshToken
             });
             console.log(user) // Displaying user
-            console.log("New Access Token:", accessToken);
-            console.log("New Refresh Token:", refreshToken);
+            // console.log("New Access Token:", accessToken);
+            // console.log("New Refresh Token:", refreshToken);
         }
     });
 }

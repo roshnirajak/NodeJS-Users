@@ -7,23 +7,11 @@ const logger = new Logger('path/to/logfile.txt');
 app.use(express.json());
 
 const loggerMiddleware = (req, res, next) => {
-    const { params } = req;
-    console.log("started")
-    console.log("body", req.body);
-    // console.log("rawHeders", req.rawHeaders); //array
-    // console.log("res", req.res); //object
-    console.log("query", req.query); //object 
-
-
     const dateTime = new Date().toISOString();
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const method = req.method;
     const requestedUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const uuid = uuidv4();
-
-    // console.log("Test Params: ",`${JSON.stringify(req.params)}`) 
-    // console.log(req)
-
 
     const requestBody = { ...req.body };
     let bodyMessage = JSON.stringify(requestBody);
@@ -36,11 +24,7 @@ const loggerMiddleware = (req, res, next) => {
     if (Object.keys(requestQuery).length !== 0) {
         queryMessage = JSON.stringify(requestQuery);
     }   
-
-    // console.log("params: ", paramsMessage);
-    // console.log("body: ", requestBody);
-    // console.log("query: ", requestQuery);
-
+    
     // Log the request
     logger.logRequest(dateTime, ipAddress, method, requestedUrl, uuid);
     logger.logInfo(dateTime, uuid, bodyMessage, paramsMessage, queryMessage, req.method);

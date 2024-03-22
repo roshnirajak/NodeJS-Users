@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 const CreateStudentForm = ({ toggleForm }) => {
+    const navigate = useNavigate();
     const [name, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [courseId, setCourseId] = useState('');
@@ -26,50 +29,49 @@ const CreateStudentForm = ({ toggleForm }) => {
                     }
                 },);
 
-            console.log(response.data);
             setCourses(response.data);
 
         } catch (error) {
             if (error.response && error.response.status === 401) {
-              console.log('Access Token expired. Refreshing token...');
-              console.log("refresh token: ", refresh_token)
-              try {
-                const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
-                  headers: {
-                    Authorization: `Bearer ${refresh_token}`
-                  }
-                });
-                if (refreshResponse) {
-                  const newAccessToken = refreshResponse.data.accessToken;
-                  const newRefreshToken = refreshResponse.data.refreshToken;
-      
-                  localStorage.setItem('accessToken', newAccessToken)
-                  localStorage.setItem('refreshToken', newRefreshToken)
-      
-                  const retryResponse = await axios.get('http://localhost:8080/users/get-course/',
-                    {
-                      
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
+                console.log('Access Token expired. Refreshing token...');
+                console.log("refresh token: ", refresh_token)
+                try {
+                    const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+                        headers: {
+                            Authorization: `Bearer ${refresh_token}`
+                        }
                     });
-                    setCourses(response.data);
+                    if (refreshResponse) {
+                        const newAccessToken = refreshResponse.data.accessToken;
+                        const newRefreshToken = refreshResponse.data.refreshToken;
+
+                        localStorage.setItem('accessToken', newAccessToken)
+                        localStorage.setItem('refreshToken', newRefreshToken)
+
+                        const retryResponse = await axios.get('http://localhost:8080/users/get-course/',
+                            {
+
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            });
+                        setCourses(response.data);
+                    }
+
+                } catch (refreshError) {
+                    console.log('Error refreshing token:');
+                    console.clear();
+                    navigate('/login')
                 }
-      
-              } catch (refreshError) {
-                console.log('Error refreshing token:');
-                console.clear();
-                navigate('/login')
-              }
-              finally {
-              }
+                finally {
+                }
             }
             else {
-              console.clear();
-              navigate('/login')
+                console.clear();
+                navigate('/login')
             }
-          }
-        };
+        }
+    };
     const handleCreateStudent = async (e) => {
         e.preventDefault();
         try {
@@ -88,6 +90,7 @@ const CreateStudentForm = ({ toggleForm }) => {
             setEmail('');
             setCourseId('');
             toggleForm();
+
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 toast.error(error.response.data.error);

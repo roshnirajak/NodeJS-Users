@@ -66,7 +66,6 @@ function register(req, res) {
 // Joi for login input
 const loginSchema = Joi.object({
     email: Joi.string().email().required()
-    // Password is not included in the schema since it will be retrieved from headers
 });
 
 function login(req, res) {
@@ -186,46 +185,53 @@ async function changePassword(req, res) {
 }
 
 function refreshToken(req, res) {
-    const authHeader = req.headers['authorization']
-
+    const authHeader = req.headers['authorization'];
+  
     let refresh_token = authHeader && authHeader.split(' ')[1];
-
+  
     if (refresh_token == null) {
-        res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
-        return res.end();
+      return res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
     }
-
+  
     jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
-        if (err) {
-            res.status(401).send({ error: true, message: "Refresh token is expired or invalid" }); // Refresh token is expired or invalid
-            return res.end();
+      if (err) {
+        console.error("Error verifying refresh token:", err);
+        return res.status(401).send({ error: true, message: "Refresh token is expired or invalid" }); // Refresh token is expired or invalid
+      }
+  
+      if (user != undefined) {
+        try {
+          const admin = await authModel.getAdminByEmail(user.email);
+  
+          const accessToken = jwt.sign(
+            { uuid: admin.uuid, email: user.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '5m' }
+          );
+  
+          const refreshToken = jwt.sign(
+            { uuid: admin.uuid, email: user.email },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '8m' }
+          );
+  
+          // Sending new data
+          res.status(200).send({
+            accessToken: accessToken,
+            refreshToken: refreshToken
+          });
+  
+          // Uncomment for debugging
+          // console.log("New Access Token:", accessToken);
+          // console.log("New Refresh Token:", refreshToken);
+        } catch (error) {
+          console.error("Error generating new tokens:", error);
+          return res.status(500).send({ error: true, message: "Internal Server Error" });
         }
-
-        if (user != undefined) {
-            const admin = await authModel.getAdminByEmail(user.email);
-            const accessToken = jwt.sign(
-                { uuid: admin.uuid, email: user.email },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '5m' }
-            );
-
-            const refreshToken = jwt.sign(
-                { uuid: admin.uuid, email: user.email },
-                process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '8m' }
-            );
-
-            // Sending new data
-            res.status(200).send({
-                accessToken: accessToken,
-                refreshToken: refreshToken
-            });
-            console.log(user) // Displaying user
-            // console.log("New Access Token:", accessToken);
-            // console.log("New Refresh Token:", refreshToken);
-        }
+      }
     });
-}
+  }
+  
 
 
 module.exports = {

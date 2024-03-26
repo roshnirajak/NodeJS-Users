@@ -2,6 +2,8 @@ import { React, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Notification from '../user/Notification';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleCountNotification, handleAddNotification } from '../redux/slices/notification';
 
 function Navbar() {
     const navigate = useNavigate();
@@ -10,59 +12,116 @@ function Navbar() {
     //get token
     const token = localStorage.getItem('accessToken');
     const refresh_token = localStorage.getItem('refreshToken');
+    const dispatch = useDispatch();
 
-    const [notificationCount, setNotificationCount] = useState('');
     useEffect(() => {
-        const fetchNotificationCount = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/notifications/get-notification-count', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setNotificationCount(response.data);
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log('Access Token expired. Refreshing token...');
-                    try {
-                        const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+        fetchNotificationCount();
+        fetchNotifications();
+    }, [])
+    const fetchNotificationCount = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/notifications/get-notification-count', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            dispatch(handleCountNotification(response.data));   
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log('Access Token expired. Refreshing token...');
+                try {
+                    const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+                        headers: {
+                            Authorization: `Bearer ${refresh_token}`
+                        }
+                    });
+                    if (refreshResponse) {
+                        const newAccessToken = refreshResponse.data.accessToken;
+                        const newRefreshToken = refreshResponse.data.refreshToken;
+
+                        localStorage.setItem('accessToken', newAccessToken)
+                        localStorage.setItem('refreshToken', newRefreshToken)
+
+                        const retryresponse = await axios.get('http://localhost:8080/notifications/get-notification-count', {
                             headers: {
-                                Authorization: `Bearer ${refresh_token}`
+                                Authorization: `Bearer ${newAccessToken}`
                             }
                         });
-                        if (refreshResponse) {
-                            const newAccessToken = refreshResponse.data.accessToken;
-                            const newRefreshToken = refreshResponse.data.refreshToken;
-
-                            localStorage.setItem('accessToken', newAccessToken)
-                            localStorage.setItem('refreshToken', newRefreshToken)
-
-                            const retryresponse = await axios.get('http://localhost:8080/notifications/get-notification-count', {
-                                headers: {
-                                    Authorization: `Bearer ${token}`
-                                }
-                            });
-                            setNotificationCount(retryresponse.data);
-                        }
-
-                    } catch (refreshError) {
-                        console.log('Error refreshing token:');
-                        console.clear();
-                        navigate('/login')
+                        dispatch(handleCountNotification(retryresponse.data));
                     }
-                    finally {
-                    }
-                }
-                else {
+
+                } catch (refreshError) {
+                    console.log('Error refreshing token:');
                     console.clear();
-                    navigate('/login')
+                    // navigate('/login')
+                }
+                finally {
                 }
             }
-        };
-        fetchNotificationCount()
-    }, [])
-    const toggleNotification = () => {
+            else {
+                console.clear();
+                // navigate('/login')
+            }
+        }
+    };
+           
+    const fetchNotifications = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/notifications/get-notification', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            dispatch(handleAddNotification(response.data));
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log('Access Token expired. Refreshing token...');
+                try {
+                    const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+                        headers: {
+                            Authorization: `Bearer ${refresh_token}`
+                        }
+                    });
+                    if (refreshResponse) {
+                        const newAccessToken = refreshResponse.data.accessToken;
+                        const newRefreshToken = refreshResponse.data.refreshToken;
+
+                        localStorage.setItem('accessToken', newAccessToken)
+                        localStorage.setItem('refreshToken', newRefreshToken)
+
+                        const retryresponse = await axios.get('http://localhost:8080/notifications/get-notification', {
+                            headers: {
+                                Authorization: `Bearer ${newAccessToken}`
+                            }
+                        });
+                        dispatch(handleAddNotification(retryresponse.data));
+                    }
+                } catch (refreshError) {
+                    console.log('Error refreshing token:');
+                    console.clear();
+                    // navigate('/login')
+                }
+                finally {
+                }
+            }
+            else {
+                console.clear();
+                // navigate('/login')
+            }
+        }
+    };
+    const toggleNotification = async() => {
         setShowNotification((prev) => !prev);
+        try {
+            await axios.put('http://localhost:8080/notifications/mark-as-seen', null,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            fetchNotificationCount()
+          } catch (error) {
+            console.error('Error marking notifications as seen:', error);
+          }
     };
     const removeCookies = () => {
         localStorage.removeItem('accessToken');
@@ -70,6 +129,7 @@ function Navbar() {
         console.clear();
         navigate('/login');
     }
+    const notificationCount = useSelector(state => state.notification.notificationCount);
 
     return (
         <>
@@ -92,11 +152,6 @@ function Navbar() {
                                     <span className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</span>
                                 </Link>
                             </li>
-                            {/* <li>
-                            <Link to="/check-log">
-                                <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Check Logs</span>
-                                </Link>
-                            </li> */}
                             <li>
                                 <Link to="/profile">
                                     <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Profile</span>

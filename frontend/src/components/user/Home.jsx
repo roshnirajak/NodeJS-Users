@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Toast from './Toast';
 import CreateStudentForm from './CreateStudent';
+import { useDispatch } from 'react-redux';
 
 
 const HomePage = () => {
@@ -19,20 +20,14 @@ const HomePage = () => {
     const [courseId, setCourseId] = useState('');
     const [courses, setCourses] = useState([]);
 
-
     //get token
     const token = localStorage.getItem('accessToken');
     const refresh_token = localStorage.getItem('refreshToken');
 
     useEffect(() => {
-        getAllUsers(currentPage, perPage);
-        fetchCourses();
-    }, [currentPage, perPage, searchTerm, courseId]);
-
-    const getAllUsers = async (pageNumber, perPage) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/users/get-all`,
-                {
+        const getAllUsers = async (pageNumber, perPage) => {
+            try {
+                const response = await axios.get(`http://localhost:8080/users/get-all`, {
                     params: {
                         page: pageNumber,
                         usersPerPage: perPage,
@@ -44,9 +39,73 @@ const HomePage = () => {
                     },
                 });
 
-            setUsers(response.data.users);
-            setTotalPages(response.data.totalPages);
-            setTotalStudents(response.data.totalCount)
+                setUsers(response.data.users);
+                setTotalPages(response.data.totalPages);
+                setTotalStudents(response.data.totalCount);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    console.log('Access Token expired. Refreshing token...');
+                    console.log("refresh token: ", refresh_token)
+                    try {
+                        const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+                            headers: {
+                                Authorization: `Bearer ${refresh_token}`
+                            }
+                        });
+                        if (refreshResponse) {
+                            const newAccessToken = refreshResponse.data.accessToken;
+                            const newRefreshToken = refreshResponse.data.refreshToken;
+
+                            localStorage.setItem('accessToken', newAccessToken)
+                            localStorage.setItem('refreshToken', newRefreshToken)
+
+                            const retryResponse = await axios.get('http://localhost:8080/users/get-all/', {
+                                params: {
+                                    page: pageNumber,
+                                    usersPerPage: perPage,
+                                    search: searchTerm,
+                                    course: courseId
+                                },
+                                headers: {
+                                    Authorization: `Bearer ${newAccessToken}`
+                                }
+                            });
+                            setUsers(retryResponse.data.users);
+                            setTotalPages(retryResponse.data.totalPages);
+                            setTotalStudents(retryResponse.data.totalCount);
+                            // console.log('Retried request:', retryResponse.data);
+                        }
+
+                    } catch (refreshError) {
+                        console.log('Error refreshing token:');
+                        console.clear();
+                        navigate('/login')
+                    }
+                    finally {
+                        console.log("finally")
+                    }
+                }
+                else {
+                    console.clear();
+                    navigate('/login')
+                }
+            }
+        };
+
+        getAllUsers(currentPage, perPage);
+        fetchCourses();
+    }, [currentPage, perPage, searchTerm, courseId]);
+
+
+
+    const fetchCourses = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/users/get-course', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setCourses(response.data);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 console.log('Access Token expired. Refreshing token...');
@@ -64,21 +123,13 @@ const HomePage = () => {
                         localStorage.setItem('accessToken', newAccessToken)
                         localStorage.setItem('refreshToken', newRefreshToken)
 
-                        const retryResponse = await axios.get('http://localhost:8080/users/get-all/',
+                        const retryResponse = await axios.get('http://localhost:8080/users/get-course/',
                             {
-                                params: {
-                                    page: pageNumber,
-                                    usersPerPage: perPage,
-                                    search: searchTerm,
-                                },
                                 headers: {
-                                    Authorization: `Bearer ${token}`,
+                                    Authorization: `Bearer ${newAccessToken}`,
                                 },
                             });
-
-                        setUsers(retryResponse.data.users);
-                        setTotalPages(retryResponse.data.totalPages);
-                        setTotalStudents(retryResponse.data.totalCount)
+                        setCourses(response.data);
                     }
 
                 } catch (refreshError) {
@@ -87,25 +138,13 @@ const HomePage = () => {
                     navigate('/login')
                 }
                 finally {
+                    
                 }
             }
             else {
                 console.clear();
                 navigate('/login')
             }
-        }
-    };
-
-    const fetchCourses = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/users/get-course', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setCourses(response.data);
-        } catch (error) {
-            console.error('Error fetching courses:', error);
         }
     };
 
@@ -231,8 +270,8 @@ const HomePage = () => {
                             }}
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             required
-                        > 
-                        <option value="">All Courses</option>
+                        >
+                            <option value="">All Courses</option>
                             {courses.map((course) => (
 
                                 <option key={course.course_id} value={course.course_id}>

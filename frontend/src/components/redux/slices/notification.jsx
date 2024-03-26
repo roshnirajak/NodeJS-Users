@@ -3,26 +3,29 @@ import { createSlice } from '@reduxjs/toolkit';
 const notificationSlice = createSlice({
   name: 'notification',
   initialState: {
+    notifications: [], // Array to hold fetched notifications
     notificationCount: 0,
     notificationEmpty: null,
-    notificationAdd: [],
   },
   reducers: {
     handleAddNotification(state, action) {
-      state.notificationAdd.push(action.payload); // Push the new notification to the array
+      state.notifications.push(action.payload);
     },
-    handleEmptyNotification(state, action) {
-      state.notificationEmpty = action.payload;
+    clearNotifications(state) {
+      state.notifications = [];
+      state.notificationCount = 0;
+      state.notificationEmpty = true;
     },
     handleCountNotification(state, action) {
-      state.notificationCount += action.payload;
+      state.notificationCount = action.payload;
     },
+
   },
 });
 
 export const {
   handleAddNotification,
-  handleEmptyNotification,
+  clearNotifications,
   handleCountNotification,
 } = notificationSlice.actions;
 

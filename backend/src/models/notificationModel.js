@@ -1,5 +1,5 @@
 const express = require('express');
-const authModel= require('./authModel')
+const authModel = require('./authModel')
 
 const app = express();
 app.use(express.json());
@@ -30,6 +30,7 @@ const getNotificationModel = async (admin_email, callback) => {
         FROM notifications AS n
         JOIN students AS s ON n.student_id = s.student_id
         WHERE n.admin_id = ${admin.admin_id}
+        AND n.is_active=1
         ORDER BY n.created_at DESC
       `;
         connection.query(query, (err, results) => {
@@ -44,16 +45,16 @@ const getNotificationModel = async (admin_email, callback) => {
     }
 };
 
-const getNotificationCountModel = async(admin_email, callback) =>{
+const getNotificationCountModel = async (admin_email, callback) => {
     try {
         const admin = await authModel.getAdminByEmail(admin_email);
         if (!admin) {
             throw new Error('Admin data not found');
         }
-        
+
         const countQuery = `
         SELECT COUNT(*) AS totalCount FROM notifications 
-        WHERE admin_id = ${admin.admin_id} AND is_seen=0`;
+        WHERE admin_id = ${admin.admin_id} AND is_seen=0 AND is_active= 1`;
 
         connection.query(countQuery, (err, results) => {
             if (err) {
@@ -69,4 +70,57 @@ const getNotificationCountModel = async(admin_email, callback) =>{
     }
 }
 
-module.exports = { addNotification, getNotificationModel, getNotificationCountModel };
+const notificationIsSeen = async (admin_email, callback) => {
+    try {
+        const admin = await authModel.getAdminByEmail(admin_email);
+        if (!admin) {
+            throw new Error('Admin data not found');
+        }
+        const query = 'UPDATE notifications SET is_seen = 1 WHERE admin_id = ?';
+
+        connection.query(query, [admin.admin_id], (err, result) => {
+            if (err) {
+                console.error('Error marking notifications as seen:', err);
+                callback(err, null);
+                return;
+            }
+            callback(null, { message: 'Notifications marked as seen' });
+        });
+    } catch (error) {
+        console.error('Error marking notifications as seen:', error);
+        callback(error, null);
+    }
+};
+
+
+const clearAllNotifications = async (admin_email, callback) => {
+    console.log("clearAllNotifications")
+    try {
+        const admin = await authModel.getAdminByEmail(admin_email);
+        if (!admin) {
+            throw new Error('Admin data not found');
+        }
+        const query = 'UPDATE notifications SET is_active = 0 WHERE admin_id = ?';
+
+        connection.query(query, [admin.admin_id], (err, result) => {
+            if (err) {
+                console.error('Error marking notifications as seen:', err);
+                callback(err, null);
+                return;
+            }
+            callback(null, { message: 'Notifications cleared' });
+        });
+    } catch (error) {
+        console.error('Error clearing notification:', error);
+        callback(error, null);
+    }
+  };
+  
+
+module.exports = {
+    addNotification,
+    getNotificationModel,
+    getNotificationCountModel,
+    notificationIsSeen,
+    clearAllNotifications,
+};

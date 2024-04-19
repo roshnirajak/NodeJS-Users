@@ -6,14 +6,13 @@ const Toast = ({ message }) => {
   return (
     <ToastContainer
       position="top-right"
-      autoClose={3000}
-      hideProgressBar={false}
+      autoClose={2500}
+      hideProgressBar={true}
       newestOnTop
-      closeOnClick
       rtl={false}
       pauseOnFocusLoss
-      draggable
       pauseOnHover
+      closeButton={false}
     />
   );
 };

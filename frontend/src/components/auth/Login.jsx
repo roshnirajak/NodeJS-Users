@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Toast from '../user/Toast'
 
 function Login() {
     const navigate = useNavigate();
@@ -10,42 +12,35 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:8080/api/login',
+
+        const response = await axios.post('http://localhost:8080/api/login',
             { email },
             {
-              headers: {
-                password: password, 
-                'Content-Type': 'application/json',
-              },
+                headers: {
+                    email: email,
+                    password: password,
+                    'Content-Type': 'application/json',
+                },
             }
-          );
-
-            if (response.status === 201) {
-                const { accessToken, refreshToken } = response.data;
-
-                localStorage.setItem('accessToken', accessToken)
-                localStorage.setItem('refreshToken', refreshToken)
-
-                console.log('Login successful');
-                navigate('/')
-            }
-
-        } catch (error) {
-            if (error.response) {
-                setError(error.response.data.message);
-                console.error('Login error:', error.response.data);
-            }
-            else {
-                setError('An unexpected error occurred. Please try again.');
-                console.error('Error:', error.message);
-            }
+        );
+        if (response.data.error) {
+            toast.error(response.data.message);
+            return
         }
+        else {
+            const { accessToken, refreshToken } = response.data;
+            localStorage.setItem('accessToken', accessToken)
+            localStorage.setItem('refreshToken', refreshToken)
+            navigate('/')
+        }
+
+
     };
 
     return (
         <>
             <div><br /> <br />
+            <Toast />
                 <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
                     <h2 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl dark:text-white">Login</h2>
                     <div className="mb-5">

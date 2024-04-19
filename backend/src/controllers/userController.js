@@ -53,7 +53,6 @@ const createStudent = async (req, res) => {
     const { error, value } = studentSchema.validate(req.body);
 
     if (error) {
-        console.log(error)
         return res.status(400).json({ error: error.details[0].message });
     }
 

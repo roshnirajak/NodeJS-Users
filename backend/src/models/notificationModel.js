@@ -62,7 +62,6 @@ const getNotificationCountModel = async (admin_email, callback) => {
                 return;
             }
             const totalCount = results[0].totalCount;
-            console.log(totalCount)
             callback(null, totalCount);
         });
     } catch (error) {
@@ -94,7 +93,6 @@ const notificationIsSeen = async (admin_email, callback) => {
 
 
 const clearAllNotifications = async (admin_email, callback) => {
-    console.log("clearAllNotifications")
     try {
         const admin = await authModel.getAdminByEmail(admin_email);
         if (!admin) {

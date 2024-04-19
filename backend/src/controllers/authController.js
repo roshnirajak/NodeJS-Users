@@ -7,96 +7,60 @@ const saltRounds = 10;
 const dotenv = require('dotenv');
 dotenv.config();
 
+const userSchema = Joi.object({
+    name: Joi.string().min(3).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(14).required(),
+});
 
-function register(req, res) {
-    const userSchema = Joi.object({
-        name: Joi.string().min(3).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).max(14).required(),
-    });
-
+const register = async (req, res) => {
+    let newAdmin = {};
     const { error, value } = userSchema.validate(req.body);
 
     if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+        return res.status(200).json({ error: true, message: error.details[0].message });
     }
-
-    authModel.getAdminByEmail(value.email)
-        .then(existingAdmin => {
-            if (existingAdmin) {
-                // Admin with this email already exists
-                return res.status(409).json({ error: 'Email already exists' });
-            }
-
-            bcrypt.hash(value.password, saltRounds, (hashErr, hash) => {
-                if (hashErr) {
-                    console.error('Error in encryption:', hashErr);
-                    return res.status(500).json({ error: 'Error in encryption' });
-                }
-
-                const newAdmin = {
-                    uuid: uuidv4(),
-                    name: value.name,
-                    email: value.email,
-                    password: hash,
-                };
-
-                authModel.registerAdmin(newAdmin, (registerErr, result) => {
-                    if (registerErr) {
-                        console.error('Error:', registerErr);
-                        return res.status(500).json({ error: 'Error creating admin' });
-                    }
-
-                    const createdAdmin = {
-                        name: newAdmin.name,
-                        email: newAdmin.email,
-                    };
-
-                    return res.status(200).json({ message: 'Admin created successfully', admin: createdAdmin });
-                });
-            });
-        })
-        .catch(err => {
-            console.error('Error checking existing admin:', err);
-            return res.status(500).json({ error: 'Internal Server Error' });
-        });
+    const hashedPassword = await bcrypt.hash(value.password, 10);
+    const existingAdmin = await authModel.getAdminByEmail(value.email)
+    if (existingAdmin[0]) {
+        return res.status(200).json({ error: true, message: "Email Already Exists" });
+    }
+    else {
+        newAdmin = {
+            uuid: uuidv4(),
+            name: value.name,
+            email: value.email,
+            password: hashedPassword,
+        };
+        await authModel.registerAdmin(newAdmin)
+        return res.status(200).json({ error: false, message: 'Admin created successfully', data: [] });
+    }
 }
 
 
-// Joi for login input
-const loginSchema = Joi.object({
-    email: Joi.string().email().required()
-});
-
 function login(req, res) {
-    const { error, value } = loginSchema.validate(req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-
-    const { email } = value;
-    const password = req.headers.password; // Retrieve password from headers
+    const email = req.headers.email;
+    const password = req.headers.password;
 
     authModel.loginAdmin(email, password, async (err, user) => {
         if (err) {
             console.error('Error logging in user:', err);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(200).json({ error: true, message: 'Internal Server Error' });
         }
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+        else if (!user) {
+            return res.status(200).json({ error: true, message: 'Invalid email or password' });
         }
         const admin = await authModel.getAdminByEmail(user.email);
         const accessToken = jwt.sign(
             { uuid: admin.uuid, email: admin.email },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '5m' }
+            { expiresIn: '20m' }
         );
 
         const refreshToken = jwt.sign(
             { uuid: user.uuid, email: user.email },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '8m' }
+            { expiresIn: '30m' }
         );
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
@@ -108,7 +72,8 @@ function login(req, res) {
             secure: true,
             sameSite: 'None',
         });
-        res.status(201).json({ message: 'Login successful', 'accessToken': accessToken, 'refreshToken': refreshToken });
+        res.status(200).json({ error: false, message: 'Login successful', 'accessToken': accessToken, 'refreshToken': refreshToken });
+
     });
 }
 
@@ -135,8 +100,6 @@ async function changePassword(req, res) {
     const email = req.headers.email;
     const oldPassword = req.headers.oldpassword;
     const newPassword = req.headers.newpassword;
-
-    console.log("email", email)
 
     // Validate newPassword
     const schema = Joi.object({
@@ -186,52 +149,48 @@ async function changePassword(req, res) {
 
 function refreshToken(req, res) {
     const authHeader = req.headers['authorization'];
-  
+
     let refresh_token = authHeader && authHeader.split(' ')[1];
-  
+
     if (refresh_token == null) {
-      return res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
+        return res.status(402).send({ error: true, message: "Token not found" }); // Token doesn't exist
     }
-  
+
     jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
-      if (err) {
-        console.error("Error verifying refresh token:", err);
-        return res.status(401).send({ error: true, message: "Refresh token is expired or invalid" }); // Refresh token is expired or invalid
-      }
-  
-      if (user != undefined) {
-        try {
-          const admin = await authModel.getAdminByEmail(user.email);
-  
-          const accessToken = jwt.sign(
-            { uuid: admin.uuid, email: user.email },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '5m' }
-          );
-  
-          const refreshToken = jwt.sign(
-            { uuid: admin.uuid, email: user.email },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '8m' }
-          );
-  
-          // Sending new data
-          res.status(200).send({
-            accessToken: accessToken,
-            refreshToken: refreshToken
-          });
-  
-          // Uncomment for debugging
-          // console.log("New Access Token:", accessToken);
-          // console.log("New Refresh Token:", refreshToken);
-        } catch (error) {
-          console.error("Error generating new tokens:", error);
-          return res.status(500).send({ error: true, message: "Internal Server Error" });
+        if (err) {
+            console.error("Error verifying refresh token:", err);
+            return res.status(401).send({ error: true, message: "Refresh token is expired or invalid" }); // Refresh token is expired or invalid
         }
-      }
+
+        if (user != undefined) {
+            try {
+                const admin = await authModel.getAdminByEmail(user.email);
+
+                const accessToken = jwt.sign(
+                    { uuid: admin.uuid, email: user.email },
+                    process.env.ACCESS_TOKEN_SECRET,
+                    { expiresIn: '20m' }
+                );
+
+                const refreshToken = jwt.sign(
+                    { uuid: admin.uuid, email: user.email },
+                    process.env.REFRESH_TOKEN_SECRET,
+                    { expiresIn: '30m' }
+                );
+
+                // Sending new data
+                res.status(200).send({
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                });
+            } catch (error) {
+                console.error("Error generating new tokens:", error);
+                return res.status(500).send({ error: true, message: "Internal Server Error" });
+            }
+        }
     });
-  }
-  
+}
+
 
 
 module.exports = {

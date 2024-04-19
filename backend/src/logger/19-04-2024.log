@@ -1,0 +1,189 @@
+2024-04-19T06:23:17.450Z: [REQ] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification-count
+
+2024-04-19T06:23:17.450Z: [INF] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.450Z: [ERR] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Message = [object Object]
+
+2024-04-19T06:23:17.450Z: [ERR] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-04-19T06:23:17.450Z: [RES] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Response Status = 401
+
+2024-04-19T06:23:17.450Z: [RES] : d5d7fa04-90a5-4d1e-a209-e704c6f69fe9 | Response Status = 401
+
+2024-04-19T06:23:17.489Z: [REQ] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification
+
+2024-04-19T06:23:17.489Z: [INF] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.489Z: [ERR] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Message = [object Object]
+
+2024-04-19T06:23:17.489Z: [ERR] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-04-19T06:23:17.489Z: [RES] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Response Status = 401
+
+2024-04-19T06:23:17.489Z: [RES] : 5eef3da7-2d4d-4cab-b4ea-97e0d47b7d47 | Response Status = 401
+
+2024-04-19T06:23:17.494Z: [REQ] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:17.494Z: [INF] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:17.494Z: [ERR] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Message = [object Object]
+
+2024-04-19T06:23:17.494Z: [ERR] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-04-19T06:23:17.494Z: [RES] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Response Status = 401
+
+2024-04-19T06:23:17.494Z: [RES] : 920e184d-85a5-457b-869c-b4cdff7e6620 | Response Status = 401
+
+2024-04-19T06:23:17.500Z: [REQ] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-04-19T06:23:17.500Z: [INF] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.500Z: [ERR] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Message = [object Object]
+
+2024-04-19T06:23:17.500Z: [ERR] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Message = {"error":true,"message":"Authorization failed!"}
+
+2024-04-19T06:23:17.500Z: [RES] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Response Status = 401
+
+2024-04-19T06:23:17.500Z: [RES] : 31b5fbe2-9131-4962-9c3a-d2fa3b24cb3a | Response Status = 401
+
+2024-04-19T06:23:17.517Z: [REQ] : 5b5fe0e6-b3ed-415f-9354-a64ef5a3fa30 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-04-19T06:23:17.517Z: [INF] : 5b5fe0e6-b3ed-415f-9354-a64ef5a3fa30 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.517Z: [ERR] : 5b5fe0e6-b3ed-415f-9354-a64ef5a3fa30 | Message = [object Object]
+
+2024-04-19T06:23:17.517Z: [ERR] : 5b5fe0e6-b3ed-415f-9354-a64ef5a3fa30 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-04-19T06:23:17.517Z: [RES] : 5b5fe0e6-b3ed-415f-9354-a64ef5a3fa30 | Response Status = 401
+
+2024-04-19T06:23:17.528Z: [REQ] : 47e065b1-8227-48e4-86d0-162c7cb225d1 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-04-19T06:23:17.528Z: [INF] : 47e065b1-8227-48e4-86d0-162c7cb225d1 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.528Z: [ERR] : 47e065b1-8227-48e4-86d0-162c7cb225d1 | Message = [object Object]
+
+2024-04-19T06:23:17.528Z: [ERR] : 47e065b1-8227-48e4-86d0-162c7cb225d1 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-04-19T06:23:17.528Z: [RES] : 47e065b1-8227-48e4-86d0-162c7cb225d1 | Response Status = 401
+
+2024-04-19T06:23:17.545Z: [REQ] : a154603f-61cf-401e-b988-6271e5fed5d9 | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-04-19T06:23:17.545Z: [INF] : a154603f-61cf-401e-b988-6271e5fed5d9 | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.545Z: [ERR] : a154603f-61cf-401e-b988-6271e5fed5d9 | Message = [object Object]
+
+2024-04-19T06:23:17.545Z: [ERR] : a154603f-61cf-401e-b988-6271e5fed5d9 | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-04-19T06:23:17.545Z: [RES] : a154603f-61cf-401e-b988-6271e5fed5d9 | Response Status = 401
+
+2024-04-19T06:23:17.554Z: [REQ] : d7c7b8f2-0473-4658-a148-3d82f3b514ad | Client Address = ::1, Request URL= http://localhost:8080/api/refresh-token/
+
+2024-04-19T06:23:17.554Z: [INF] : d7c7b8f2-0473-4658-a148-3d82f3b514ad | Method = POST| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:17.554Z: [ERR] : d7c7b8f2-0473-4658-a148-3d82f3b514ad | Message = [object Object]
+
+2024-04-19T06:23:17.554Z: [ERR] : d7c7b8f2-0473-4658-a148-3d82f3b514ad | Message = {"error":true,"message":"Refresh token is expired or invalid"}
+
+2024-04-19T06:23:17.554Z: [RES] : d7c7b8f2-0473-4658-a148-3d82f3b514ad | Response Status = 401
+
+2024-04-19T06:23:22.872Z: [REQ] : a2c3207b-aee5-41b7-b8f4-f8174d5f2ac4 | Client Address = ::1, Request URL= http://localhost:8080/api/login
+
+2024-04-19T06:23:22.872Z: [INF] : a2c3207b-aee5-41b7-b8f4-f8174d5f2ac4 | Method = POST| Body = {"email":"admin1@gmail.com"} | Params = {} | Query = 
+
+2024-04-19T06:23:22.872Z: [RES] : a2c3207b-aee5-41b7-b8f4-f8174d5f2ac4 | Response Status = 201
+
+2024-04-19T06:23:23.028Z: [REQ] : ecf536d9-7a3f-4a95-9b64-ee931489ff5d | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification
+
+2024-04-19T06:23:23.028Z: [INF] : ecf536d9-7a3f-4a95-9b64-ee931489ff5d | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:23.046Z: [REQ] : 5f05cda2-689c-48de-8abb-fb9327724a10 | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification-count
+
+2024-04-19T06:23:23.046Z: [INF] : 5f05cda2-689c-48de-8abb-fb9327724a10 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:23.050Z: [REQ] : 8511241a-84f4-4d74-8403-52b476106130 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:23.050Z: [INF] : 8511241a-84f4-4d74-8403-52b476106130 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:23.052Z: [REQ] : 4e3ab30c-f6e4-4c2c-beed-9d0a7dbb8b49 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-04-19T06:23:23.052Z: [INF] : 4e3ab30c-f6e4-4c2c-beed-9d0a7dbb8b49 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:23.052Z: [RES] : 4e3ab30c-f6e4-4c2c-beed-9d0a7dbb8b49 | Response Status = 200
+
+2024-04-19T06:23:23.028Z: [RES] : ecf536d9-7a3f-4a95-9b64-ee931489ff5d | Response Status = 200
+
+2024-04-19T06:23:23.046Z: [RES] : 5f05cda2-689c-48de-8abb-fb9327724a10 | Response Status = 200
+
+2024-04-19T06:23:23.050Z: [RES] : 8511241a-84f4-4d74-8403-52b476106130 | Response Status = 200
+
+2024-04-19T06:23:27.575Z: [REQ] : 4ee7e47c-8519-44ee-88b9-22cce4a54141 | Client Address = ::1, Request URL= http://localhost:8080/api/profile
+
+2024-04-19T06:23:27.575Z: [INF] : 4ee7e47c-8519-44ee-88b9-22cce4a54141 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:27.575Z: [RES] : 4ee7e47c-8519-44ee-88b9-22cce4a54141 | Response Status = 200
+
+2024-04-19T06:23:28.407Z: [REQ] : e2e4c4ca-876b-4bce-96a4-b5c23c364f36 | Client Address = ::1, Request URL= http://localhost:8080/notifications/mark-as-seen
+
+2024-04-19T06:23:28.407Z: [INF] : e2e4c4ca-876b-4bce-96a4-b5c23c364f36 | Method = PUT| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:28.407Z: [RES] : e2e4c4ca-876b-4bce-96a4-b5c23c364f36 | Response Status = 200
+
+2024-04-19T06:23:28.463Z: [REQ] : c6282fa0-366e-42e0-9322-db0039db7023 | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification-count
+
+2024-04-19T06:23:28.463Z: [INF] : c6282fa0-366e-42e0-9322-db0039db7023 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:28.463Z: [RES] : c6282fa0-366e-42e0-9322-db0039db7023 | Response Status = 304
+
+2024-04-19T06:23:31.164Z: [INF] : ba4ac3f8-3c80-46cc-a8ef-540f29a8f0fe | Method = PUT| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:31.164Z: [REQ] : ba4ac3f8-3c80-46cc-a8ef-540f29a8f0fe | Client Address = ::1, Request URL= http://localhost:8080/notifications/mark-as-seen
+
+2024-04-19T06:23:31.164Z: [RES] : ba4ac3f8-3c80-46cc-a8ef-540f29a8f0fe | Response Status = 200
+
+2024-04-19T06:23:31.181Z: [REQ] : 71251bc0-f568-460b-8f39-6953beb10de6 | Client Address = ::1, Request URL= http://localhost:8080/notifications/get-notification-count
+
+2024-04-19T06:23:31.181Z: [INF] : 71251bc0-f568-460b-8f39-6953beb10de6 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:31.181Z: [RES] : 71251bc0-f568-460b-8f39-6953beb10de6 | Response Status = 304
+
+2024-04-19T06:23:32.392Z: [REQ] : c9c67ba4-df65-4c0c-a514-599c8b7df149 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=1&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:32.392Z: [INF] : c9c67ba4-df65-4c0c-a514-599c8b7df149 | Method = GET| Body = {} | Params = {} | Query = {"page":"1","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:32.397Z: [REQ] : a6d56622-8a64-4313-944a-73988e0567ef | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-04-19T06:23:32.397Z: [INF] : a6d56622-8a64-4313-944a-73988e0567ef | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:32.392Z: [RES] : c9c67ba4-df65-4c0c-a514-599c8b7df149 | Response Status = 304
+
+2024-04-19T06:23:32.397Z: [RES] : a6d56622-8a64-4313-944a-73988e0567ef | Response Status = 304
+
+2024-04-19T06:23:36.643Z: [REQ] : 5d33f015-977a-4c5e-a861-e44c18c68abe | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=2&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:36.643Z: [INF] : 5d33f015-977a-4c5e-a861-e44c18c68abe | Method = GET| Body = {} | Params = {} | Query = {"page":"2","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:36.645Z: [REQ] : 9164ac94-9410-453a-9036-55fc22581233 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-04-19T06:23:36.645Z: [INF] : 9164ac94-9410-453a-9036-55fc22581233 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:36.645Z: [RES] : 9164ac94-9410-453a-9036-55fc22581233 | Response Status = 304
+
+2024-04-19T06:23:36.643Z: [RES] : 5d33f015-977a-4c5e-a861-e44c18c68abe | Response Status = 200
+
+2024-04-19T06:23:37.155Z: [REQ] : 1867af4b-535d-4151-b461-63dd008067e1 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=3&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:37.155Z: [INF] : 1867af4b-535d-4151-b461-63dd008067e1 | Method = GET| Body = {} | Params = {} | Query = {"page":"3","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:37.158Z: [REQ] : a7f7493c-fc98-4af6-868c-66198bfce478 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course
+
+2024-04-19T06:23:37.158Z: [INF] : a7f7493c-fc98-4af6-868c-66198bfce478 | Method = GET| Body = {} | Params = {} | Query = 
+
+2024-04-19T06:23:37.158Z: [RES] : a7f7493c-fc98-4af6-868c-66198bfce478 | Response Status = 304
+
+2024-04-19T06:23:37.155Z: [RES] : 1867af4b-535d-4151-b461-63dd008067e1 | Response Status = 200
+
+2024-04-19T06:23:37.693Z: [REQ] : a1fed385-8215-4a71-9869-79522da97669 | Client Address = ::1, Request URL= http://localhost:8080/users/get-all?page=2&usersPerPage=5&search=&course=
+
+2024-04-19T06:23:37.693Z: [INF] : a1fed385-8215-4a71-9869-79522da97669 | Method = GET| Body = {} | Params = {} | Query = {"page":"2","usersPerPage":"5","search":"","course":""}
+
+2024-04-19T06:23:37.699Z: [REQ] : c8640377-8478-414e-bdbd-77af7494e657 | Client Address = ::1, Request URL= http://localhost:8080/users/get-course

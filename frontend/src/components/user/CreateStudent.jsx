@@ -28,7 +28,7 @@ const CreateStudentForm = ({ toggleForm }) => {
                         Authorization: `Bearer ${token}`
                     }
                 },);
-
+                console.log(response.data)
             setCourses(response.data);
 
         } catch (error) {
@@ -50,7 +50,6 @@ const CreateStudentForm = ({ toggleForm }) => {
 
                         const retryResponse = await axios.get('http://localhost:8080/users/get-course/',
                             {
-
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },
@@ -86,10 +85,12 @@ const CreateStudentForm = ({ toggleForm }) => {
                 }
             );
             toast.success(response.data.message);
+            window.location.reload();
             setFullName('');
             setEmail('');
             setCourseId('');
             toggleForm();
+
 
         } catch (error) {
             if (error.response && error.response.status === 400) {

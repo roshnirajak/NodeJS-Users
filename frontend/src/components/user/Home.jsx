@@ -25,78 +25,78 @@ const HomePage = () => {
     const refresh_token = localStorage.getItem('refreshToken');
 
     useEffect(() => {
-        const getAllUsers = async (pageNumber, perPage) => {
-            try {
-                const response = await axios.get(`http://localhost:8080/users/get-all`, {
-                    params: {
-                        page: pageNumber,
-                        usersPerPage: perPage,
-                        search: searchTerm,
-                        course: courseId
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                setUsers(response.data.users);
-                setTotalPages(response.data.totalPages);
-                setTotalStudents(response.data.totalCount);
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log('Access Token expired. Refreshing token...');
-                    console.log("refresh token: ", refresh_token)
-                    try {
-                        const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
-                            headers: {
-                                Authorization: `Bearer ${refresh_token}`
-                            }
-                        });
-                        if (refreshResponse) {
-                            const newAccessToken = refreshResponse.data.accessToken;
-                            const newRefreshToken = refreshResponse.data.refreshToken;
-
-                            localStorage.setItem('accessToken', newAccessToken)
-                            localStorage.setItem('refreshToken', newRefreshToken)
-
-                            const retryResponse = await axios.get('http://localhost:8080/users/get-all/', {
-                                params: {
-                                    page: pageNumber,
-                                    usersPerPage: perPage,
-                                    search: searchTerm,
-                                    course: courseId
-                                },
-                                headers: {
-                                    Authorization: `Bearer ${newAccessToken}`
-                                }
-                            });
-                            setUsers(retryResponse.data.users);
-                            setTotalPages(retryResponse.data.totalPages);
-                            setTotalStudents(retryResponse.data.totalCount);
-                            // console.log('Retried request:', retryResponse.data);
-                        }
-
-                    } catch (refreshError) {
-                        console.log('Error refreshing token:');
-                        console.clear();
-                        navigate('/login')
-                    }
-                    finally {
-                        console.log("finally")
-                    }
-                }
-                else {
-                    console.clear();
-                    navigate('/login')
-                }
-            }
-        };
+        
 
         getAllUsers(currentPage, perPage);
         fetchCourses();
     }, [currentPage, perPage, searchTerm, courseId]);
 
+    const getAllUsers = async (pageNumber, perPage) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/users/get-all`, {
+                params: {
+                    page: pageNumber,
+                    usersPerPage: perPage,
+                    search: searchTerm,
+                    course: courseId
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
+            setUsers(response.data.users);
+            setTotalPages(response.data.totalPages);
+            setTotalStudents(response.data.totalCount);
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log('Access Token expired. Refreshing token...');
+                console.log("refresh token: ", refresh_token)
+                try {
+                    const refreshResponse = await axios.post('http://localhost:8080/api/refresh-token/', null, {
+                        headers: {
+                            Authorization: `Bearer ${refresh_token}`
+                        }
+                    });
+                    if (refreshResponse) {
+                        const newAccessToken = refreshResponse.data.accessToken;
+                        const newRefreshToken = refreshResponse.data.refreshToken;
+
+                        localStorage.setItem('accessToken', newAccessToken)
+                        localStorage.setItem('refreshToken', newRefreshToken)
+
+                        const retryResponse = await axios.get('http://localhost:8080/users/get-all/', {
+                            params: {
+                                page: pageNumber,
+                                usersPerPage: perPage,
+                                search: searchTerm,
+                                course: courseId
+                            },
+                            headers: {
+                                Authorization: `Bearer ${newAccessToken}`
+                            }
+                        });
+                        setUsers(retryResponse.data.users);
+                        setTotalPages(retryResponse.data.totalPages);
+                        setTotalStudents(retryResponse.data.totalCount);
+                        // console.log('Retried request:', retryResponse.data);
+                    }
+
+                } catch (refreshError) {
+                    console.log('Error refreshing token:');
+                    console.clear();
+                    navigate('/login')
+                }
+                finally {
+                    console.log("finally")
+                }
+            }
+            else {
+                console.clear();
+                navigate('/login')
+            }
+        }
+    };
 
     const fetchCourses = async () => {
         try {
@@ -161,7 +161,7 @@ const HomePage = () => {
                 });
 
             // console.log(response.data);
-            getAllUsers();
+            getAllUsers(currentPage, perPage);
             toast.success(response.data.message)
         } catch (error) {
             console.error('Error deleting user:', error);

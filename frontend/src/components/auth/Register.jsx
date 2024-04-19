@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
-import Cookies from 'js-cookie'
+import { toast } from 'react-toastify';
+import Toast from '../user/Toast'
 
 function Register() {
     const navigate= useNavigate();
@@ -9,36 +10,27 @@ function Register() {
     const [name, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
             const response = await axios.post('http://localhost:8080/api/register', {
                 name,
                 email,
                 password,
             });
-
-            if (response.status === 200) {
+            if (response.data.error) {
+                toast.error(response.data.message);
+                return;
+            }
+            else{
                 navigate('/login');
             }
-
-        } catch (error) {
-            if (error.response) {
-                setError(error.response.data.error);
-                console.error('Register error:', error.response.data);
-            }
-            else {
-                setError('An unexpected error occurred. Please try again.');
-                console.error('Error:', error.message);
-            }
         }
-    };
 
     return (
         <>
             <div><br /> <br />
+            <Toast />
                 <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
                     <h2 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl dark:text-white">Register</h2>
                     <div className="mb-5">
@@ -75,7 +67,6 @@ function Register() {
 
                     <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register new account</button>
                     <br />
-                    {error && <p style={{ color: 'red' }}>{error}</p>}<br/> 
                     Already have an account? <Link to='/login'>Login</Link>
                 </form>
             </div>
